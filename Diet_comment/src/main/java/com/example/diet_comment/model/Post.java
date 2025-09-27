@@ -17,7 +17,7 @@ public class Post {
     private Integer shopId;
 
 
-    private String title;
+    private String title; 
 
 
     private String content;

@@ -1,7 +1,12 @@
 package com.example.diet_comment.controller;
 
+import com.example.diet_comment.model.Result;
 import com.example.diet_comment.model.User;
 import com.example.diet_comment.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,15 +19,25 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
-        // TODO: 添加密码加密、用户名/邮箱校验等逻辑
-        boolean success = userService.save(user);
-        return success ? "Registration successful" : "Registration failed";
+    public Result register(@RequestBody User user) {
+		boolean success = userService.register(user);
+       if(success) {
+           return Result.success("Registration successful");
+       }
+       return Result.error("Registration failed");
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
-        // TODO: 实现登录验证逻辑，例如使用 Spring Security 和 JWT
-        return "Login endpoint hit. User: " + user.getUsername();
+    public Result login(@RequestBody User user) {
+        String jwt = userService.login(user);
+        if (jwt != null) {
+            return Result.success(jwt);
+        }
+        return Result.error("Login failed");
     }
 }
+
+        
+		
+
+
