@@ -80,6 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 	@Override
 	public Result pwdchange(Integer userId, String oldpwd, String newpwd) {
+        System.out.println(oldpwd+newpwd);
 		User user = this.getById(userId);
 		if (user == null) {
 			return Result.error("User not found");
