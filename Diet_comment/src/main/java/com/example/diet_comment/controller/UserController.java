@@ -1,5 +1,6 @@
 package com.example.diet_comment.controller;
 
+import com.example.diet_comment.model.DTO.PwdChangeReq;
 import com.example.diet_comment.model.Image;
 import com.example.diet_comment.model.Result;
 import com.example.diet_comment.model.User;
@@ -32,6 +33,7 @@ public class UserController {
     public Result getUserInfo(HttpServletRequest request) {
 
         Integer currentUserId = (Integer) request.getAttribute("userId");
+        System.out.println("userid"+currentUserId);
 		UserDTO userDTO = userService.getUserDTOById(currentUserId);
 		
 		if(userDTO!=null) {
@@ -43,15 +45,20 @@ public class UserController {
 
 
 
-    @PutMapping("/userpage")
-    public Result updateUserInfo( HttpServletRequest request,@RequestParam(required = false) String username,
+    @PutMapping(value = "/userpage",consumes = "multipart/form-data")
+    public Result updateUserInfo( HttpServletRequest request,@RequestParam(required = false) String userName,
 	@RequestParam(required = false) MultipartFile image) {
-
+        System.out.println("username"+userName);
         Integer currentUserId = (Integer) request.getAttribute("userId");
         User user = userService.getById(currentUserId);
 
-		if(username!=null && !username.isEmpty()) {
-			user.setUserName(username);
+
+
+
+
+
+		if(userName!=null && !userName.isEmpty()) {
+			user.setUserName(userName);
 		}
 
 		if(image!=null && !image.isEmpty()) {
@@ -60,6 +67,7 @@ public class UserController {
 		}
 
 		if(userService.updateById(user)) {
+
             return Result.success();
         }
         return Result.error("Update failed");
@@ -75,11 +83,11 @@ public class UserController {
 	}
 
 
-	@PostMapping("/userpage/pwdput")
-	public Result pwdput(String oldpwd, String newpwd, HttpServletRequest request) {
-		Integer currentUserId = (Integer) request.getAttribute("userId");
-		return userService.pwdchange(currentUserId, oldpwd, newpwd);
-	}
+    @PostMapping(value = "/userpage/pwdput", consumes = "application/json")
+    public Result pwdput(@RequestBody PwdChangeReq req, HttpServletRequest request) {
+        Integer currentUserId = (Integer) request.getAttribute("userId");
+        return userService.pwdchange(currentUserId, req.getOldpwd(), req.getNewpwd());
+    }
 	
 
 
