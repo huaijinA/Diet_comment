@@ -18,6 +18,7 @@ public class Image {
     @TableField("imageable_id")
     private Integer imageableId;
 
+    //包括post和shop两个类型
     @TableField("imageable_type")
     private String imageableType;
 

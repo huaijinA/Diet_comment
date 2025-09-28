@@ -62,7 +62,7 @@ public class UserController {
 		}
 
 		if(image!=null && !image.isEmpty()) {
-			String avatarUrl = imageService.uploadImage(currentUserId,image);
+			String avatarUrl = imageService.uploadImageById(currentUserId,image,"user");
 			user.setAvatarUrl(avatarUrl);
 		}
 

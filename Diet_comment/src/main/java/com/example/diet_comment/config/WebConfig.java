@@ -20,7 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
 				.addPathPatterns("/**") // 拦截所有请求
 				.excludePathPatterns(
 						"/login",
-						"/register"
+						"/register",
+                        "/error"
 				);
 	}
 	
