@@ -6,5 +6,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.diet_comment.model.Image;
 
 public interface ImageService extends IService<Image> {
-	String uploadImage(Integer userId, MultipartFile image);
+    String uploadImageById(Integer Id,MultipartFile image,String code);
+
 }

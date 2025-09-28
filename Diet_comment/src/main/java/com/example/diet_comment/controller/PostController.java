@@ -4,16 +4,33 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.diet_comment.model.Post;
 import com.example.diet_comment.mapper.PostMapper;
+import com.example.diet_comment.model.Result;
+import com.example.diet_comment.service.PostService;
+import com.example.diet_comment.service.ShopService;
+import com.example.diet_comment.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import com.example.diet_comment.service.ImageService;
 import java.util.List;
+
+
 
 @RestController
 public class PostController {
 
     @Autowired
     private PostMapper postMapper;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private ShopService shopService;
 
     @GetMapping("/homepage")
     public List<Post> getHomepage() {
@@ -24,17 +41,37 @@ public class PostController {
         return postMapper.selectPage(page, queryWrapper).getRecords();
     }
 
-    @PostMapping("/post")
-    public Post createPost(@RequestBody Post post) {
-        // TODO: 从安全上下文中获取用户ID并设置
-        // post.setUserId(currentUserId);
-        postMapper.insert(post);
-        return post;
+    @PostMapping(value = "/post", consumes = "multipart/form-data")
+    public Result createPost(HttpServletRequest request,
+                             @RequestParam String title,
+                             @RequestParam String content,
+                             @RequestParam String shopName,
+                             @RequestPart(value = "img", required = false) MultipartFile img) {
+
+        Integer userId = (Integer) request.getAttribute("userId");
+
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        post.setUserId(userId);
+        Integer shopId = shopService.getShopIdByName(shopName);
+        System.out.println("LOG"+shopId);
+        post.setShopId(shopId);
+
+        Integer postId = postService.addPost(post);
+
+        if (img != null && !img.isEmpty()) {
+            String url = imageService.uploadImageById(postId, img, "post");
+
+        }
+        return Result.success();
     }
 
     @GetMapping("/post/{id}")
     public Post getPostById(@PathVariable Integer id) {
         // TODO: 实现帖子详情，可能需要关联查询作者、店铺等信息
+
+
         return postMapper.selectById(id);
     }
 
