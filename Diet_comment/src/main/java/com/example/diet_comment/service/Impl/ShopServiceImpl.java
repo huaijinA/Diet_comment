@@ -28,5 +28,13 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements Sho
     }
 
 
+    public Shop getShopByShopId(Integer shopId){
+        if(shopId==null||shopId<=0){
+            return null;
+        }
+        return this.getById(shopId);
+    }
+
+
 
 }

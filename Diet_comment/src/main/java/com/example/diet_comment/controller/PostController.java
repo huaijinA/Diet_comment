@@ -2,9 +2,11 @@ package com.example.diet_comment.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.diet_comment.model.DTO.UserDTO;
 import com.example.diet_comment.model.Post;
 import com.example.diet_comment.mapper.PostMapper;
 import com.example.diet_comment.model.Result;
+import com.example.diet_comment.model.Shop;
 import com.example.diet_comment.service.PostService;
 import com.example.diet_comment.service.ShopService;
 import com.example.diet_comment.service.UserService;
@@ -25,6 +27,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ImageService imageService;
@@ -68,11 +73,23 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public Post getPostById(@PathVariable Integer id) {
-        // TODO: 实现帖子详情，可能需要关联查询作者、店铺等信息
+    public Result getPostById(@PathVariable Integer id) {
+
+        Post post =  postService.getPostById(id);
+
+        if(post.getUserId()!=null){
+            UserDTO user = userService.getUserDTOById(post.getUserId());
+            post.setUser(user);
+
+        }
 
 
-        return postMapper.selectById(id);
+        if(post.getShopId()!=null){
+            Shop shop = shopService.getShopByShopId(post.getShopId());
+            post.setShop(shop);
+        }
+
+        return Result.success(post);
     }
 
     @PutMapping("/post/{id}")
