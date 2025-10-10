@@ -7,4 +7,6 @@ import com.example.diet_comment.model.Shop;
 
 public interface ShopService extends IService<Shop> {
     Integer getShopIdByName(String shopName);
+
+    Shop getShopByShopId(Integer shopId);
 }
