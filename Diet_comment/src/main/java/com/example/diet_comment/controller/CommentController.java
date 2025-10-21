@@ -3,10 +3,13 @@ package com.example.diet_comment.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.diet_comment.model.Comment;
+import com.example.diet_comment.model.Result;
 import com.example.diet_comment.mapper.CommentMapper;
+import com.example.diet_comment.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.List;
 
 @RestController
@@ -14,6 +17,9 @@ public class CommentController {
 
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/post/{postId}/comment")
     public List<Comment> getComments(@PathVariable Integer postId,
@@ -50,5 +56,26 @@ public class CommentController {
         // reply.setUserId(currentUserId);
         commentMapper.insert(reply);
         return reply;
+    }
+        /**
+     * 获取帖子评论（分页）
+     * URL: /post/{id}/comment
+     * 方法: GET
+     * 请求参数: page (int, 可选, 默认1), size (int, 可选, 默认10)
+     * 响应: Result 包含评论列表（data 为 List<Comment>）
+     */
+    @GetMapping("/post/{id}/comment")
+    public Result getPostComments(
+            @PathVariable Integer id,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size) {
+
+        // 分页查询评论
+        Page<Comment> pg = new Page<>(page, size);
+        Page<Comment> commentPage = commentService.getCommentsByPostId(pg, id);
+        List<Comment> comments = commentPage.getRecords();
+
+
+        return Result.success(comments);
     }
 }
