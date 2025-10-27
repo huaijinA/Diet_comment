@@ -11,3 +11,4 @@ class DietCommentApplicationTests {
     }
 
 }
+// 可根据实际响应结构调整路径
