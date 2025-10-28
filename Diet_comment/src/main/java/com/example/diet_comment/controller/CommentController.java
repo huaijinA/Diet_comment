@@ -64,7 +64,7 @@ public class CommentController {
      * 请求参数: page (int, 可选, 默认1), size (int, 可选, 默认10)
      * 响应: Result 包含评论列表（data 为 List<Comment>）
      */
-    @GetMapping("/post/{id}/comment")
+    @GetMapping("/post/{id}/commentget")
     public Result getPostComments(
             @PathVariable Integer id,
             @RequestParam(required = false, defaultValue = "1") Integer page,
