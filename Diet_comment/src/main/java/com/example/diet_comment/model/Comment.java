@@ -1,6 +1,7 @@
 package com.example.diet_comment.model;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.example.diet_comment.model.DTO.UserDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class Comment {
 
     // 以下字段不存在于数据库表中，用于关联查询时接收数据
     @TableField(exist = false)
-    private User user; // 评论作者信息
+    private UserDTO user; // 评论作者信息
 
     @TableField(exist = false)
     private List<Comment> replies; // 子评论列表
@@ -76,4 +77,37 @@ public class Comment {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	//
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
+    public List<Comment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Comment> replies) {
+        this.replies = replies;
+    }
 }
