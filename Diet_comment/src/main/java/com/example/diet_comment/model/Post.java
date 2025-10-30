@@ -40,6 +40,9 @@ public class Post {
     @TableField(exist = false)
     private List<Comment> comments; // 帖子的评论列表
 
+    @TableField(exist = false)
+    private String imageUrl; // 帖子的图片URL
+
     // Getters and Setters
 	public Integer getId() {
 		return id;
@@ -112,4 +115,7 @@ public class Post {
     public Shop getShop() {
         return shop;
     }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

@@ -76,10 +76,17 @@ public class PostController {
         Integer postId = postService.addPost(post);
 
         if (img != null && !img.isEmpty()) {
-            String url = imageService.uploadImageById(postId, img, "post");
-
+            String filePath = imageService.uploadImageById(postId, img, "post");
+            if (filePath != null) {
+                String imageUrl = filePath.replaceFirst("^\\./?", "/").replace("\\", "/");
+                post.setImageUrl(imageUrl);
+                // 可选：把 image info 插入 image 表（如果你有 Image 表）
+            }
         }
-        return Result.success();
+
+        // 返回包含 imageUrl 的 post 给前端
+        post.setId(postId);
+        return Result.success(post);
     }
 
     @GetMapping("/post/{id}")
