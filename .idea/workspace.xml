@@ -5,11 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="808dc0fb-57b8-432d-9d38-3470fa1fbd46" name="更改" comment="完成接口3，未测试">
+      <change afterPath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/controller/ImageController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/controller/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/controller/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/model/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/model/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/model/Image.java" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/model/Image.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/service/ImageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/service/ImageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/service/Impl/ImageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/service/Impl/ImageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/DietCommentApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/DietCommentApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/config/MyMetaObjectHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/config/MyMetaObjectHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/config/WebConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/config/WebConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/controller/AuthController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/controller/CommentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/controller/CommentController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/controller/PostController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/controller/PostController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/interceptor/LoginCheck.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/interceptor/LoginCheck.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/CommentMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/CommentMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/ImageMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/ImageMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/PostMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/PostMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/ShopMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/ShopMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/UserMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/mapper/UserMapper.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Comment.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Comment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/DTO/PwdChangeReq.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/DTO/PwdChangeReq.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/DTO/UserDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/DTO/UserDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Dish.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Dish.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Image.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Image.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Post.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Post.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Result.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Shop.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/Shop.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/ShopRating.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/ShopRating.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/CommentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/CommentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/ImageService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/ImageService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/CommentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/CommentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/ImageServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/ImageServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/PostServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/PostServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/ShopServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/ShopServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/Impl/UserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/PostService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/PostService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/ShopService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/ShopService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/service/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/utils/Jwt.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/utils/Jwt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/utils/PasswordUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/target/classes/com/example/diet_comment/utils/PasswordUtils.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,41 +107,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DietCommentApplication.executor&quot;: &quot;Run&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;me&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/8888/IdeaProjects/Diet_comment&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;项目&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.language.and.region&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.DietCommentApplication.executor": "Run",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/22731/Diet_comment",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "项目",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.language.and.region",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql_aurora&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql_aurora"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="DietCommentApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH" value="17 (2)" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <module name="Diet_comment" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.diet_comment.DietCommentApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -115,11 +156,12 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
-        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
       </set>
     </attachedChunks>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="808dc0fb-57b8-432d-9d38-3470fa1fbd46" name="更改" comment="" />
@@ -143,6 +185,7 @@
       <workItem from="1761549808186" duration="1082000" />
       <workItem from="1761619725262" duration="50000" />
       <workItem from="1761651069067" duration="620000" />
+      <workItem from="1762432381747" duration="680000" />
     </task>
     <task id="LOCAL-00001" summary="frist">
       <option name="closed" value="true" />
