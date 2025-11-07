@@ -19,7 +19,7 @@ public class Shop {
     @TableField("address")
     private String address;
 
-	@TableField("description")
+    @TableField("description")
     private String description;
 
     @TableField("average_rating")
@@ -30,7 +30,10 @@ public class Shop {
 
     @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
-    
+
+    @TableField("tags")
+    private String tags;
+
     // 以下字段不存在于数据库表中，用于关联查询时接收数据
     @TableField(exist = false)
     private List<Dish> dishes;
@@ -43,6 +46,7 @@ public class Shop {
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -50,7 +54,24 @@ public class Shop {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getTags() {
+        return tags;
     }
 }

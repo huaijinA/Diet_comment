@@ -41,7 +41,7 @@ public class UserDTO {
 		);
 	}
 
-	private Integer getId() {
+	public Integer getId() {
 		return id;
 	}
 

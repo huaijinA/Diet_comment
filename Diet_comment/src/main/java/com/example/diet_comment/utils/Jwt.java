@@ -44,7 +44,7 @@ public class Jwt {
         return Jwts.builder()
                 .setClaims(claims) 
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                //  .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))暂时移除
                 .signWith(SECRET_KEY)
                 .compact();
     }
