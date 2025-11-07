@@ -116,6 +116,13 @@ public class PostController {
         postMapper.deleteById(id);
         return "Post with ID " + id + " deleted.";
     }
+
+
+    @PostMapping("/post/search")
+    public Result searchPosts(@RequestParam String keyword) {
+        List<Post> posts = postService.searchPostsByKeyword(keyword);
+        return Result.success(posts);
+    }
     
 
 
