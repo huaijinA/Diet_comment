@@ -4,6 +4,8 @@ package com.example.diet_comment.service.Impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.diet_comment.mapper.PostMapper;
+import com.example.diet_comment.mapper.ShopMapper;
+import com.example.diet_comment.mapper.UserMapper;
 import com.example.diet_comment.model.DTO.UserDTO;
 import com.example.diet_comment.model.Post;
 import com.example.diet_comment.model.Shop;
@@ -13,6 +15,7 @@ import com.example.diet_comment.service.ShopService;
 import com.example.diet_comment.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -24,15 +27,25 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl extends ServiceImpl<PostMapper,Post> implements PostService {
-
+    @Autowired
     private final UserService userService;
+    @Autowired
     private final ShopService shopService;
+    @Autowired
+    private final PostMapper postMapper;
 
     @Autowired
-    public PostServiceImpl(UserService userService, ShopService shopService) {
+    private CommentServiceImpl commentServiceImpl;
+    @Autowired
+    private ImageServiceImpl imageServiceImpl;
+
+    public PostServiceImpl(UserService userService, ShopService shopService, PostMapper postMapper, ShopMapper imageService, UserMapper commentService) {
         this.userService = userService;
         this.shopService = shopService;
+        this.postMapper = postMapper;
+
     }
+
 
     @Override
     public Integer addPost(Post post){
@@ -135,4 +148,30 @@ public class PostServiceImpl extends ServiceImpl<PostMapper,Post> implements Pos
 
         return posts;
     }
+
+
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deletePostsById(Integer id) {
+        Post existingPost = postMapper.selectById(id);
+
+
+        // 删除评论
+       commentServiceImpl.deleteCommentsByPostId(id);
+
+        // 删除图片
+        imageServiceImpl.deleteByTypeAndId("post", id);
+
+
+        // 删除帖子本身
+        postMapper.deleteById(id);
+    }
+
+
+
+
 }
+
+

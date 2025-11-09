@@ -10,4 +10,5 @@ public interface PostService extends IService<Post> {
     Post getPostById(int id);
 
     List<Post> searchPostsByKeyword(String keyword);
+    void deletePostsById(Integer Id);
 }
