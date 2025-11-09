@@ -102,18 +102,69 @@ public class PostController {
         return Result.success(post);
     }
 
-    @PutMapping("/post/{id}")
-    public Result updatePost(HttpServletRequest request,@PathVariable Integer id, @RequestBody Post post) {
-        post.setId(id);
 
-        Integer userID= (Integer) request.getAttribute("userId");
-        Post existingPost = postMapper.selectById(id);
-        if (existingPost == null || !existingPost.getUserId().equals(userID)) {
-            return Result.error("无权限修改该帖子或帖子不存在");
+
+    @PutMapping(value = "/post/{id}", consumes = "multipart/form-data")
+    public Result updatePost(HttpServletRequest request,
+                             @PathVariable Integer id,
+                             @RequestParam(required = false) String title,
+                             @RequestParam(required = false) String content,
+                             @RequestParam(required = false) String shopName,
+                             @RequestPart(value = "img", required = false) MultipartFile img) {
+
+
+        Integer userId = (Integer) request.getAttribute("userId");
+        Post existingPost = postService.getPostById(id);
+        if (existingPost == null) {
+            return Result.error("帖子不存在");
         }
-        postMapper.updateById(post);
-        return Result.success(post);
+        if (!existingPost.getUserId().equals(userId)) {
+            return Result.error("无权限修改该帖子");
+        }
+
+
+        if (img != null && !img.isEmpty()) {
+            try {
+
+                imageService.deleteByTypeAndId("post", id);
+
+                String newImageUrl = imageService.uploadImageById(id, img, "post");
+                if (newImageUrl == null) {
+
+                    return Result.error("图片更新失败");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Result.error("处理图片时发生错误: " + e.getMessage());
+            }
+        }
+
+
+        boolean isUpdated = false;
+        if (title != null && !title.equals(existingPost.getTitle())) {
+            existingPost.setTitle(title);
+            isUpdated = true;
+        }
+        if (content != null && !content.equals(existingPost.getContent())) {
+            existingPost.setContent(content);
+            isUpdated = true;
+        }
+        if (shopName != null) {
+            Integer shopId = shopService.getShopIdByName(shopName);
+            if (shopId != null && !shopId.equals(existingPost.getShopId())) {
+                existingPost.setShopId(shopId);
+                isUpdated = true;
+            }
+        }
+
+
+        if (isUpdated) {
+            postService.updateById(existingPost);
+        }
+
+        return Result.success(postService.getPostById(id));
     }
+
 
     @DeleteMapping("/post/{id}")
     public Result deletePost(HttpServletRequest request,@PathVariable Integer id) {
