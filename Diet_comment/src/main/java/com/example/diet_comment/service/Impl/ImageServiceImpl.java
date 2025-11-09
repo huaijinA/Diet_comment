@@ -133,6 +133,54 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
 		}
 	}
 
+
+    @Override
+    public void deleteByTypeAndId(String imageableType, Integer imageableId) {
+
+        if (imageableType == null || imageableType.trim().isEmpty() || imageableId == null || imageableId <= 0) {
+            return;
+        }
+
+        try {
+
+            QueryWrapper<Image> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("imageable_type", imageableType)
+                    .eq("imageable_id", imageableId);
+
+            List<Image> imagesToDelete = this.list(queryWrapper);
+            if (imagesToDelete == null || imagesToDelete.isEmpty()) {
+                return;
+            }
+
+
+            for (Image image : imagesToDelete) {
+                String imageUrl = image.getImageUrl();
+                if (imageUrl == null || imageUrl.isEmpty()) {
+                    continue;
+                }
+
+                //  (/images/post/xxx.png)
+                String urlPathSegment = "/images/";
+                int pathStartIndex = imageUrl.indexOf(urlPathSegment);
+                if (pathStartIndex != -1) {
+                    String relativePath = imageUrl.substring(pathStartIndex + urlPathSegment.length());
+                    File fileToDelete = new File(basePath + relativePath);
+                    log.debug(basePath + relativePath);
+                    if (fileToDelete.exists() && fileToDelete.isFile()) {
+                        fileToDelete.delete();
+                    }
+                }
+            }
+
+            this.remove(queryWrapper);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
+
+
 	// 校验关联实体类型是否合法（对应接口规范中的 post/comment/shop/user）
 	private boolean isValidImageableType(String type) {
 		return "post".equals(type) || "comment".equals(type) || "shop".equals(type) || "user".equals(type);

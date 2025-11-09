@@ -56,7 +56,7 @@ public class CommentController {
     //             .isNull("parent_comment_id") // 只获取主评论
     //             .orderByDesc("created_at");
     //     return commentMapper.selectPage(page, queryWrapper).getRecords();
-    // }asddwf
+    // }
 
     @PostMapping("/post/{postId}/comment")
     public Result createComment(HttpServletRequest request, 
@@ -71,7 +71,7 @@ public class CommentController {
         // 设置评论属性
         comment.setPostId(postId);
         comment.setUserId(userId);
-        comment.setCreatedAt(java.time.LocalDateTime.now());
+
 
         // 插入评论
         commentMapper.insert(comment);

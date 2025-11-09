@@ -103,18 +103,35 @@ public class PostController {
     }
 
     @PutMapping("/post/{id}")
-    public Post updatePost(@PathVariable Integer id, @RequestBody Post post) {
+    public Result updatePost(HttpServletRequest request,@PathVariable Integer id, @RequestBody Post post) {
         post.setId(id);
-        // TODO: 校验当前用户是否有权限修改该帖子
+
+        Integer userID= (Integer) request.getAttribute("userId");
+        Post existingPost = postMapper.selectById(id);
+        if (existingPost == null || !existingPost.getUserId().equals(userID)) {
+            return Result.error("无权限修改该帖子或帖子不存在");
+        }
         postMapper.updateById(post);
-        return post;
+        return Result.success(post);
     }
 
     @DeleteMapping("/post/{id}")
-    public String deletePost(@PathVariable Integer id) {
-        // TODO: 校验当前用户是否有权限删除该帖子
-        postMapper.deleteById(id);
-        return "Post with ID " + id + " deleted.";
+    public Result deletePost(HttpServletRequest request,@PathVariable Integer id) {
+        Integer userID= (Integer) request.getAttribute("userId");
+        Post existingPost = postMapper.selectById(id);
+        if (existingPost == null || !existingPost.getUserId().equals(userID)) {
+            return Result.error("无权限修改该帖子或帖子不存在");
+        }
+        try {
+            postService.deletePostsById(id);
+            return Result.success();
+        } catch (IllegalStateException e) {
+            return Result.error("删除帖子失败: " + e.getMessage());
+        } catch (Exception e) {
+            return Result.error("删除失败，已回滚");
+        }
+
+
     }
 
 

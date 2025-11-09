@@ -5,4 +5,5 @@ import com.example.diet_comment.model.Comment;
 
 public interface CommentService {
     Page<Comment> getCommentsByPostId(Page<Comment> page, Integer postId);
+    void deleteCommentsByPostId(Integer postId);
 }

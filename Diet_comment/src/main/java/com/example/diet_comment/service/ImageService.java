@@ -18,7 +18,7 @@ public interface ImageService extends IService<Image> {
     List<String> getImagesByTypeAndId(String imageableType, Integer imageableId);
 
 
-
+    void deleteByTypeAndId(String imageableType, Integer imageableId);
 
 
 }
