@@ -75,6 +75,70 @@ public class PostServiceImpl extends ServiceImpl<PostMapper,Post> implements Pos
     }
 
     @Override
+    public List<Post> getPostsByUserId(Integer userId) {
+        if (userId == null || userId <= 0) {
+            return Collections.emptyList();
+        }
+
+        LambdaQueryWrapper<Post> postQuery = new LambdaQueryWrapper<>();
+        postQuery.eq(Post::getUserId, userId);
+        List<Post> posts = this.list(postQuery);
+
+        if (CollectionUtils.isEmpty(posts)) {
+            return Collections.emptyList();
+        }
+
+        List<Integer> postUserIds = posts.stream().map(Post::getUserId).distinct().collect(Collectors.toList());
+        List<Integer> postShopIds = posts.stream().map(Post::getShopId).distinct().collect(Collectors.toList());
+
+        Map<Integer, UserDTO> userDTOMap = userService.listByIds(postUserIds).stream()
+                .map(user -> new UserDTO().fromUser(user))
+                .collect(Collectors.toMap(UserDTO::getId, userDTO -> userDTO));
+
+        Map<Integer, Shop> shopMap = shopService.listByIds(postShopIds).stream()
+                .collect(Collectors.toMap(Shop::getId, shop -> shop));
+
+        posts.forEach(post -> {
+            post.setUser(userDTOMap.get(post.getUserId()));
+            post.setShop(shopMap.get(post.getShopId()));
+        });
+
+        return posts;
+    }
+
+    @Override
+    public List<Post> getPostsByShopId(Integer shopId) {
+        if (shopId == null || shopId <= 0) {
+            return Collections.emptyList();
+        }
+
+        LambdaQueryWrapper<Post> postQuery = new LambdaQueryWrapper<>();
+        postQuery.eq(Post::getShopId, shopId);
+        List<Post> posts = this.list(postQuery);
+
+        if (CollectionUtils.isEmpty(posts)) {
+            return Collections.emptyList();
+        }
+
+        List<Integer> postUserIds = posts.stream().map(Post::getUserId).distinct().collect(Collectors.toList());
+        List<Integer> postShopIds = posts.stream().map(Post::getShopId).distinct().collect(Collectors.toList());
+
+        Map<Integer, UserDTO> userDTOMap = userService.listByIds(postUserIds).stream()
+                .map(user -> new UserDTO().fromUser(user))
+                .collect(Collectors.toMap(UserDTO::getId, userDTO -> userDTO));
+
+        Map<Integer, Shop> shopMap = shopService.listByIds(postShopIds).stream()
+                .collect(Collectors.toMap(Shop::getId, shop -> shop));
+
+        posts.forEach(post -> {
+            post.setUser(userDTOMap.get(post.getUserId()));
+            post.setShop(shopMap.get(post.getShopId()));
+        });
+
+        return posts;
+    }
+
+    @Override
     public List<Post> searchPostsByKeyword(String keyword1) {
         System.out.println("搜索关键字: " + keyword1);
         String keyword;
@@ -168,6 +232,8 @@ public class PostServiceImpl extends ServiceImpl<PostMapper,Post> implements Pos
         // 删除帖子本身
         postMapper.deleteById(id);
     }
+
+
 
 
 

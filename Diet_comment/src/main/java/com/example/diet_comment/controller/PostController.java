@@ -104,6 +104,28 @@ public class PostController {
 
 
 
+    @GetMapping("post")
+    public Result getPostsByUserOrShopId(@RequestParam(required = false) Integer userId,
+                                          @RequestParam(required = false) Integer shopId) {
+        if (userId == null && shopId == null) {
+            return Result.error("必须提供 userId 或 shopId 之一");
+        }
+
+        List<Post> posts;
+        if (userId != null) {
+            posts = postService.getPostsByUserId(userId);
+        } else{
+            posts = postService.getPostsByShopId(shopId);
+        }
+
+        if ( posts.isEmpty() ){
+            return Result.error("没有找到相关帖子");
+        }
+
+        return Result.success(posts);
+    }
+
+
     @PutMapping(value = "/post/{id}", consumes = "multipart/form-data")
     public Result updatePost(HttpServletRequest request,
                              @PathVariable Integer id,
