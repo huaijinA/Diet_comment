@@ -211,6 +211,9 @@ public class PostController {
     @PostMapping("/post/search")
     public Result searchPosts(@RequestParam String keyword) {
         List<Post> posts = postService.searchPostsByKeyword(keyword);
+        if(posts.isEmpty()){
+            return Result.error("没有找到相关帖子");
+        }
         return Result.success(posts);
     }
     
