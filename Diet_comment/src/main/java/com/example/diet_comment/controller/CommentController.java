@@ -65,8 +65,8 @@ public class CommentController {
     // }
 
     @PostMapping("/post/{postId}/comment")
-    public Result createComment(HttpServletRequest request, 
-                              @PathVariable Integer postId, 
+    public Result createComment(HttpServletRequest request,
+                              @PathVariable Integer postId,
                               @RequestBody Comment comment) {
         // 从请求属性中获取当前用户ID（LoginCheck拦截器已设置）
         Integer userId = (Integer) request.getAttribute("userId");
@@ -91,7 +91,7 @@ public class CommentController {
     }
 
     @GetMapping("/post/{postId}/comment/{commentId}")
-    public Result getCommentDetail(@PathVariable Integer postId, 
+    public Result getCommentDetail(@PathVariable Integer postId,
                                  @PathVariable Integer commentId) {
         // 获取评论详情
         Comment comment = commentMapper.selectById(commentId);
@@ -115,7 +115,7 @@ public class CommentController {
                 .eq("parent_comment_id", commentId)
                 .orderByDesc("created_at");
             List<Comment> replies = commentMapper.selectList(queryWrapper);
-            
+
             // 为回复填充用户信息
             for (Comment reply : replies) {
                 if (reply.getUserId() != null) {
@@ -130,9 +130,9 @@ public class CommentController {
 
     @PostMapping("/post/{postId}/comment/{commentId}")
     public Result replyToComment(HttpServletRequest request,
-                               @PathVariable Integer postId, 
-                               @PathVariable Integer commentId, 
-                               @RequestBody Comment reply) {
+                               @PathVariable Integer postId,
+                               @PathVariable Integer commentId,
+                               @RequestBody Comment content) {
         // 从请求属性中获取当前用户ID
         Integer userId = (Integer) request.getAttribute("userId");
         if (userId == null) {
@@ -144,23 +144,23 @@ public class CommentController {
         if (parentComment == null) {
             return Result.error("要回复的评论不存在");
         }
-        
+
         // 检查父评论是否属于该帖子
         if (!postId.equals(parentComment.getPostId())) {
             return Result.error("评论不属于该帖子");
         }
 
         // 设置回复属性
-        reply.setPostId(postId);
-        reply.setUserId(userId);
-        reply.setParentCommentId(commentId);
-        reply.setCreatedAt(java.time.LocalDateTime.now());
+        content.setPostId(postId);
+        content.setUserId(userId);
+        content.setParentCommentId(commentId);
+        content.setCreatedAt(java.time.LocalDateTime.now());
 
         // 插入回复
-        commentMapper.insert(reply);
+        commentMapper.insert(content);
 
         // 查询并返回完整回复（包含用户信息）
-        Comment created = commentMapper.selectById(reply.getId());
+        Comment created = commentMapper.selectById(content.getId());
         if (created != null && created.getUserId() != null) {
             created.setUser(userService.getUserDTOById(created.getUserId()));
         }
