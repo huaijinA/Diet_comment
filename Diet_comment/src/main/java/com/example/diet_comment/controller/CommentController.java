@@ -43,8 +43,14 @@ public class CommentController {
         Page<Comment> commentPage = commentService.getCommentsByPostId(pg, id);
         List<Comment> comments = commentPage.getRecords();
 
+    java.util.Map<String, Object> resp = new java.util.HashMap<>();
+    resp.put("records", comments);
+    resp.put("total", commentPage.getTotal());
+    resp.put("pages", commentPage.getPages());
+    resp.put("current", commentPage.getCurrent());
+    resp.put("size", commentPage.getSize());
 
-        return Result.success(comments);
+    return Result.success(resp);
     }
     // @GetMapping("/post/{postId}/comment")
     // public List<Comment> getComments(@PathVariable Integer postId,
