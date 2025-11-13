@@ -6,6 +6,7 @@ import com.example.diet_comment.model.Comment;
 import com.example.diet_comment.model.Result;
 import com.example.diet_comment.mapper.CommentMapper;
 import com.example.diet_comment.service.CommentService;
+import com.example.diet_comment.service.PostService;
 import com.example.diet_comment.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,11 @@ public class CommentController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private PostService postService;
 
-            /**
+    /**
      * 获取帖子评论（分页）
      * URL: /post/{id}/comment
      * 方法: GET
@@ -37,47 +41,56 @@ public class CommentController {
             @PathVariable Integer id,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size) {
+        
+        // 检查帖子是否存在
+        if (postService.getPostById(id) == null) {
+            return Result.error("帖子不存在");
+        }
 
         // 分页查询评论
         Page<Comment> pg = new Page<>(page, size);
         Page<Comment> commentPage = commentService.getCommentsByPostId(pg, id);
         List<Comment> comments = commentPage.getRecords();
 
-    java.util.Map<String, Object> resp = new java.util.HashMap<>();
-    resp.put("records", comments);
-    resp.put("total", commentPage.getTotal());
-    resp.put("pages", commentPage.getPages());
-    resp.put("current", commentPage.getCurrent());
-    resp.put("size", commentPage.getSize());
+        java.util.Map<String, Object> resp = new java.util.HashMap<>();
+        resp.put("records", comments);
+        resp.put("total", commentPage.getTotal());
+        resp.put("pages", commentPage.getPages());
+        resp.put("current", commentPage.getCurrent());
+        resp.put("size", commentPage.getSize());
 
-    return Result.success(resp);
+        return Result.success(resp);
     }
     // @GetMapping("/post/{postId}/comment")
     // public List<Comment> getComments(@PathVariable Integer postId,
-    //                                  @RequestParam(defaultValue = "1") long pageNum,
-    //                                  @RequestParam(defaultValue = "10") long pageSize) {
-    //     Page<Comment> page = new Page<>(pageNum, pageSize);
-    //     QueryWrapper<Comment> queryWrapper = new QueryWrapper<Comment>()
-    //             .eq("post_id", postId)
-    //             .isNull("parent_comment_id") // 只获取主评论
-    //             .orderByDesc("created_at");
-    //     return commentMapper.selectPage(page, queryWrapper).getRecords();
+    // @RequestParam(defaultValue = "1") long pageNum,
+    // @RequestParam(defaultValue = "10") long pageSize) {
+    // Page<Comment> page = new Page<>(pageNum, pageSize);
+    // QueryWrapper<Comment> queryWrapper = new QueryWrapper<Comment>()
+    // .eq("post_id", postId)
+    // .isNull("parent_comment_id") // 只获取主评论
+    // .orderByDesc("created_at");
+    // return commentMapper.selectPage(page, queryWrapper).getRecords();
     // }
 
     @PostMapping("/post/{postId}/comment")
     public Result createComment(HttpServletRequest request,
-                              @PathVariable Integer postId,
-                              @RequestBody Comment comment) {
+            @PathVariable Integer postId,
+            @RequestBody Comment comment) {
         // 从请求属性中获取当前用户ID（LoginCheck拦截器已设置）
         Integer userId = (Integer) request.getAttribute("userId");
         if (userId == null) {
             return Result.error("未登录");
         }
+        
+        // 检查帖子是否存在
+        if (postService.getPostById(postId) == null) {
+            return Result.error("帖子不存在");
+        }
 
         // 设置评论属性
         comment.setPostId(postId);
         comment.setUserId(userId);
-
 
         // 插入评论
         commentMapper.insert(comment);
@@ -92,7 +105,7 @@ public class CommentController {
 
     @GetMapping("/post/{postId}/comment/{commentId}")
     public Result getCommentDetail(@PathVariable Integer postId,
-                                 @PathVariable Integer commentId) {
+            @PathVariable Integer commentId) {
         // 获取评论详情
         Comment comment = commentMapper.selectById(commentId);
         if (comment == null) {
@@ -112,8 +125,8 @@ public class CommentController {
         // 如果是主评论，查询其直接回复
         if (comment.getParentCommentId() == null) {
             QueryWrapper<Comment> queryWrapper = new QueryWrapper<Comment>()
-                .eq("parent_comment_id", commentId)
-                .orderByDesc("created_at");
+                    .eq("parent_comment_id", commentId)
+                    .orderByDesc("created_at");
             List<Comment> replies = commentMapper.selectList(queryWrapper);
 
             // 为回复填充用户信息
@@ -130,13 +143,18 @@ public class CommentController {
 
     @PostMapping("/post/{postId}/comment/{commentId}")
     public Result replyToComment(HttpServletRequest request,
-                               @PathVariable Integer postId,
-                               @PathVariable Integer commentId,
-                               @RequestBody Comment content) {
+            @PathVariable Integer postId,
+            @PathVariable Integer commentId,
+            @RequestBody Comment reply) {
         // 从请求属性中获取当前用户ID
         Integer userId = (Integer) request.getAttribute("userId");
         if (userId == null) {
             return Result.error("未登录");
+        }
+        
+        // 检查帖子是否存在
+        if (postService.getPostById(postId) == null) {
+            return Result.error("帖子不存在");
         }
 
         // 检查父评论是否存在
@@ -151,16 +169,16 @@ public class CommentController {
         }
 
         // 设置回复属性
-        content.setPostId(postId);
-        content.setUserId(userId);
-        content.setParentCommentId(commentId);
-        content.setCreatedAt(java.time.LocalDateTime.now());
+        reply.setPostId(postId);
+        reply.setUserId(userId);
+        reply.setParentCommentId(commentId);
+        reply.setCreatedAt(java.time.LocalDateTime.now());
 
         // 插入回复
-        commentMapper.insert(content);
+        commentMapper.insert(reply);
 
         // 查询并返回完整回复（包含用户信息）
-        Comment created = commentMapper.selectById(content.getId());
+        Comment created = commentMapper.selectById(reply.getId());
         if (created != null && created.getUserId() != null) {
             created.setUser(userService.getUserDTOById(created.getUserId()));
         }
