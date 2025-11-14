@@ -25,7 +25,7 @@ public class CommentController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private PostService postService;
 
@@ -41,7 +41,7 @@ public class CommentController {
             @PathVariable Integer id,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size) {
-        
+
         // 检查帖子是否存在
         if (postService.getPostById(id) == null) {
             return Result.error("帖子不存在");
@@ -82,7 +82,7 @@ public class CommentController {
         if (userId == null) {
             return Result.error("未登录");
         }
-        
+
         // 检查帖子是否存在
         if (postService.getPostById(postId) == null) {
             return Result.error("帖子不存在");
@@ -95,12 +95,13 @@ public class CommentController {
         // 插入评论
         commentMapper.insert(comment);
 
+
         // 查询并返回完整评论（包含用户信息）
         Comment created = commentMapper.selectById(comment.getId());
         if (created != null && created.getUserId() != null) {
             created.setUser(userService.getUserDTOById(created.getUserId()));
         }
-        return Result.success(created);
+        return Result.success(comment.getId());
     }
 
     @GetMapping("/post/{postId}/comment/{commentId}")
@@ -151,7 +152,7 @@ public class CommentController {
         if (userId == null) {
             return Result.error("未登录");
         }
-        
+
         // 检查帖子是否存在
         if (postService.getPostById(postId) == null) {
             return Result.error("帖子不存在");
