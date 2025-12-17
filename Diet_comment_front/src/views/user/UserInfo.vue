@@ -1,7 +1,12 @@
 <template>
   <div class="page">
     <div class="window">
-      <img :src="editAvatar || userInfo.avatarUrl" class="avatar" @click="changeAvatar" />
+      <img
+        :src="editAvatar || userInfo.avatarUrl"
+        :alt="用户图片"
+        class="avatar"
+        @click="changeAvatar"
+      />
       <div class="avatartext">点击头像更换</div>
       <div class="info">
         <input
@@ -95,7 +100,7 @@ export default {
       this.$refs.fileInput.click()
     },
     cancelEdit() {
-      this.$router.push({ path: '/UserWindow' })
+      this.$router.back()
     },
     async saveEdit() {
       try {
@@ -109,9 +114,10 @@ export default {
           if (response2.code === 1) {
             this.$store.dispatch('clearUserInfo')
             this.$store.dispatch('getUserInfo', response2.data)
+            this.$store.dispatch('getOneUser', response2.data)
             this.success = '更新成功'
             this.error = ''
-            setTimeout(() => this.$router.push('/UserWindow'), 1000)
+            setTimeout(() => this.$router.back(), 1000)
           } else {
             this.error = '获取用户信息失败'
           }
@@ -165,7 +171,6 @@ export default {
   margin-top: 20px;
   margin-bottom: 5px;
   object-fit: cover;
-  display: block;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -190,10 +195,8 @@ export default {
 }
 .info input {
   flex: 1;
-  box-sizing: border-box;
   background: transparent;
   border-radius: 5px;
-  height: 100%;
   box-sizing: border-box;
   height: 30px;
   font-size: 15px;
@@ -222,7 +225,6 @@ export default {
   width: 40%;
   border-radius: 10px;
   border-width: 1px;
-  margin-top: 20px;
   margin-top: 20px;
   cursor: pointer;
   background: linear-gradient(135deg, rgba(255, 154, 38, 0.461) 0%, rgba(253, 219, 52, 0.08) 100%);

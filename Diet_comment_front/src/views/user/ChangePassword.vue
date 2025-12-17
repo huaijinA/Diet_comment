@@ -63,11 +63,10 @@ export default {
         }
       } else {
         this.error = '请完整填写'
-        return
       }
     },
     cancel() {
-      this.$router.push({ path: '/UserWindow' })
+      this.$router.back()
     },
   },
 }
@@ -115,7 +114,6 @@ export default {
   align-items: center;
   justify-content: center;
   margin: 20px 0px;
-  /* border: 1px solid; */
 }
 .old {
   font-size: 30px;
@@ -139,12 +137,10 @@ export default {
   display: flex;
   justify-content: center;
   padding: 20px;
-  /* border: 1px solid; */
 }
 .footer button {
   background: linear-gradient(135deg, rgba(255, 154, 38, 0.461) 0%, rgba(253, 219, 52, 0.08) 100%);
   cursor: pointer;
-  font-size: medium;
   width: 40%;
   border-radius: 5px;
   font-size: 30px;

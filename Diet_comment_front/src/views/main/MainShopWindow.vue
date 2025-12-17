@@ -1,12 +1,14 @@
 <template>
   <div class="home-page">
     <header class="topbar">
-      <div class="logo">小众点评</div>
-      <div class="search">
-        <input v-model="presearch" @keyup.enter="doSearch" placeholder="搜索商家、菜品、位置..." />
-        <button @click="doSearch">搜索</button>
+      <div class="logogroup">
+        <span class="logo">小众点评 </span>
+        <button @click="goMainPost">进入味蕾社区🏠</button>
       </div>
-
+      <div class="search">
+        <input v-model="presearch" @keyup.enter="doSearch" placeholder="搜索商家、标签、位置..." />
+        <button @click="doSearch">🔎搜索</button>
+      </div>
       <div class="user" @click="avatarflag = !avatarflag" ref="avatarBtn" title="用户菜单">
         <img :src="userInfo.avatarUrl" alt="用户头像" />
         <transition name="fade-scale">
@@ -26,8 +28,8 @@
 
     <section class="hero">
       <div class="hero-inner">
-        <h2>发现附近的美食、好店</h2>
-        <p>实时评分 · 用户点评 · 精选推荐</p>
+        <h2>欢迎来到美食广场</h2>
+        <p>发现附近的美食、好店</p>
       </div>
     </section>
 
@@ -46,14 +48,8 @@
       <aside class="filters">
         <h3>筛选</h3>
         <div>
-          <label>支持配送<input type="checkbox" v-model="filters.delivery" /></label>
-        </div>
-        <div>
-          <label>打折<input type="checkbox" v-model="filters.coupon" /></label>
-        </div>
-        <div>
           <label>
-            评分
+            人均评分
             <select v-model="filters.minRating">
               <option :value="0">不限</option>
               <option :value="3">>3.0</option>
@@ -83,23 +79,22 @@
             <select v-model="sortBy">
               <option value="rating">评分</option>
               <option value="reviews">评价数</option>
-              <option value="distance">距离</option>
             </select>
           </div>
         </div>
 
         <ul class="cards">
-          <li v-for="shop in pagedShops" :key="shop.id" class="card">
+          <li v-for="shop in pagedShops" :key="shop.id" class="card" @click="goShop(shop)">
             <img :src="shop.imgurl" alt="店铺封面" />
             <div class="card-body">
               <div class="row top">
-                <h4 class="name">{{ shop.shopname }}</h4>
-                <button class="fav" @click="toggleFav(shop)">{{ shop.fav ? '★' : '☆' }}</button>
+                <h4 class="name">{{ shop.name }}</h4>
+                <span class="fav">{{ shop.fav ? '★' : '☆' }}</span>
               </div>
               <div class="meta">
                 <div class="rating">
                   <span class="score">{{ shop.rating.toFixed(1) }}</span>
-                  <span class="stars" v-html="renderStars(shop.rating)"></span>
+                  <span class="imgrating2" v-html="renderStarsHtml(shop.rating)"></span>
                   <span class="reviews">（{{ shop.reviews }}条点评）</span>
                 </div>
                 <div class="tags">
@@ -107,7 +102,6 @@
                 </div>
                 <div class="info">
                   <span>人均 ¥{{ shop.price }}</span>
-                  <span> · {{ shop.distance }}km</span>
                 </div>
                 <p class="address">{{ shop.address }}</p>
               </div>
@@ -127,29 +121,27 @@
       </section>
     </main>
 
-    <footer class="foot">主页</footer>
+    <footer class="foot">店铺推荐主页</footer>
   </div>
 </template>
 
 <script>
-import { getShopInfo } from '@/api/shop'
+import { getShopInfo, shopStatus } from '@/api/shop'
 export default {
-  name: 'MainWindowPage',
+  name: 'MainShopWindowPage',
   data() {
     return {
       avatarflag: false,
       page: 1,
       changepage: '',
-      perPage: 12,
+      perPage: 9,
       error: '',
-      shops: null,
+      shops: [],
       search: '',
       presearch: '',
       category: '全部',
       sortBy: 'rating',
       filters: {
-        delivery: false,
-        coupon: false,
         minRating: 0,
         minAccount: 0,
       },
@@ -181,23 +173,20 @@ export default {
           (s) =>
             this.category === '全部' ||
             s.tags.includes(this.category) ||
-            s.shopname.toLowerCase().includes(this.category.toLowerCase()),
+            s.name.toLowerCase().includes(this.category.toLowerCase()),
         )
         .filter(
           (s) =>
             !searchs ||
-            s.shopname.toLowerCase().includes(searchs.toLowerCase()) ||
+            s.name.toLowerCase().includes(searchs.toLowerCase()) ||
             s.tags.join(' ').toLowerCase().includes(searchs.toLowerCase()) ||
             s.address.toLowerCase().includes(searchs.toLowerCase()),
         )
-        .filter((s) => !this.filters.delivery || s.delivery)
-        .filter((s) => !this.filters.coupon || s.coupon)
         .filter((s) => s.rating >= this.filters.minRating)
         .filter((s) => s.price >= this.filters.minAccount)
         .sort((a, b) => {
           if (this.sortBy === 'rating') return b.rating - a.rating
           if (this.sortBy === 'reviews') return b.reviews - a.reviews
-          if (this.sortBy === 'distance') return a.distance - b.distance
           return 0
         })
     },
@@ -229,18 +218,22 @@ export default {
       }
     },
     //评分图像显示
-    renderStars(rating) {
-      const full = Math.floor(rating)
-      const half = rating - full >= 0.5
+    renderStarsHtml(rating) {
+      const r = Number(rating) || 0
+      const full = Math.floor(r)
+      const half = r - full >= 0.5 ? 1 : 0
+      const empty = 5 - full - half
       let html = ''
-      for (let i = 0; i < full; i++) html += '★'
-      if (half) html += '☆'
-      while (html.length < 5) html += '☆'
+      for (let i = 0; i < full; i++) {
+        html += '<span class="star star-full">★</span>'
+      }
+      if (half) {
+        html += '<span class="star star-half">★</span>'
+      }
+      for (let i = 0; i < empty; i++) {
+        html += '<span class="star star-empty">★</span>'
+      }
       return html
-    },
-    //收藏函数
-    toggleFav(shop) {
-      shop.fav = !shop.fav
     },
     //获取商铺信息
     async GetShopInfo() {
@@ -248,6 +241,25 @@ export default {
         const response = await getShopInfo()
         if (response.code === 1) {
           this.shops = response.data
+
+          this.shops = this.shops.map((shop) => ({
+            ...shop,
+            fav: false,
+          }))
+
+          const shopsIds = this.shops.map((c) => c.id)
+          const favRes = await Promise.all(shopsIds.map((id) => shopStatus(id, this.userInfo.id)))
+
+          this.shops.forEach((shop) => {
+            const res = favRes.find((r) => r.data.id === shop.id)
+            if (res) {
+              if (res.code === 1) {
+                if (res.data.collected === 1) shop.fav = true
+                else shop.fav = false
+              }
+            }
+          })
+
           this.$store.dispatch('getShopInfo', this.shops)
         } else {
           this.error = '获取店铺信息失败'
@@ -277,12 +289,14 @@ export default {
     changePage() {
       if (this.changepage <= this.totalPages && this.changepage > 0) {
         this.page = this.changepage
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       } else {
         this.changepage = this.page
       }
     },
     //进入个人中心
     goHome() {
+      this.$store.dispatch('getOneUser', this.userInfo)
       this.$router.push({ path: '/UserWindow' })
     },
     //登出
@@ -292,13 +306,26 @@ export default {
     },
     //上一页
     prevPage() {
-      if (this.page > 1) this.page--
+      if (this.page > 1) {
+        this.page--
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
       this.changepage = this.page
     },
     //下一页
     nextPage() {
-      if (this.page < this.totalPages) this.page++
+      if (this.page < this.totalPages) {
+        this.page++
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
       this.changepage = this.page
+    },
+    goShop(shop) {
+      this.$store.dispatch('getOneShop', shop)
+      this.$router.push({ path: '/ShopWindow' })
+    },
+    goMainPost() {
+      this.$router.push({ path: '/' })
     },
   },
 }
@@ -334,7 +361,6 @@ export default {
 .search button {
   padding: 8px 12px;
   background: #ff6b6b;
-  color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -395,7 +421,7 @@ export default {
 }
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   gap: 12px;
   list-style: none;
   padding: 0;
@@ -409,10 +435,11 @@ export default {
   border-radius: 8px;
   border: 1px solid #f0f0f0;
   align-items: flex-start;
+  cursor: pointer;
 }
 .card img {
-  width: 160px;
-  height: 110px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 6px;
 }
@@ -489,6 +516,15 @@ export default {
   cursor: text;
   color: #666;
 }
+.pager button {
+  border: 1px solid;
+  border-radius: 5px;
+  background: linear-gradient(
+    135deg,
+    rgba(141, 255, 253, 0.461) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+}
 .foot {
   text-align: center;
   color: #999;
@@ -510,7 +546,7 @@ export default {
 .avatar-dropdown {
   position: absolute;
   right: 0;
-  top: 46px;
+  top: 60px;
   min-width: 140px;
   background: #fff;
   border-radius: 10px;
@@ -559,5 +595,60 @@ export default {
 .fade-scale-leave-from {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+.logogroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+.logogroup button {
+  padding: 4px 8px;
+  background: #ffedd5;
+  border: 1px solid;
+  border-color: #ffd6a5;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+</style>
+
+<style>
+.imgrating2 {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 12px;
+}
+.imgrating2 .star {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  line-height: 12px;
+  font-size: 12px;
+  color: #dfdfdf;
+  text-align: center;
+  margin-right: 2px;
+  z-index: 0;
+}
+.imgrating2 .star::before {
+  content: '★';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+  width: 0%;
+  pointer-events: none;
+  color: #ffc051;
+  transition: width 0.12s ease;
+  z-index: 1;
+}
+.imgrating2 .star-full::before {
+  width: 100%;
+}
+.imgrating2 .star-half::before {
+  width: 50%;
 }
 </style>

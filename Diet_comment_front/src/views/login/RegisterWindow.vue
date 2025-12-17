@@ -35,8 +35,7 @@
   </div>
 </template>
 <script>
-import { registerApi } from '@/api/login'
-import { sendCode } from '@/api/login'
+import { registerApi, sendCode } from '@/api/login'
 export default {
   name: 'RegisterWindow',
   data() {
@@ -200,7 +199,6 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
   gap: 15px;
-  width: 100%;
 }
 
 .user {
@@ -227,7 +225,6 @@ input[type='emailcode'] {
 .register {
   margin-bottom: 12px;
   margin-top: 6px;
-  display: flex;
   gap: 12px;
   width: 100%;
   display: flex;
