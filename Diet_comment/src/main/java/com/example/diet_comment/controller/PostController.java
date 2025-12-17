@@ -7,23 +7,19 @@ import com.example.diet_comment.model.Post;
 import com.example.diet_comment.mapper.PostMapper;
 import com.example.diet_comment.model.Result;
 import com.example.diet_comment.model.Shop;
-import com.example.diet_comment.service.PostService;
-import com.example.diet_comment.service.ShopService;
-import com.example.diet_comment.service.UserService;
+import com.example.diet_comment.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 
 //import org.h2.engine.Comment;？
 import com.example.diet_comment.model.Comment;
-import com.example.diet_comment.service.CommentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import com.example.diet_comment.service.ImageService;
 import java.util.List;
-
+import java.util.Map;
 
 
 @RestController
@@ -37,6 +33,9 @@ public class PostController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CollectService collectService;
 
     @Autowired
     private ImageService imageService;
@@ -79,7 +78,7 @@ public class PostController {
             String url = imageService.uploadImageById(postId, img, "post");
 
         }
-        return Result.success();
+        return Result.success(post);
     }
 
     @GetMapping("/post/{id}")
@@ -216,6 +215,57 @@ public class PostController {
         }
         return Result.success(posts);
     }
+
+    @PostMapping("/post/collect")
+    public Result collectPost(@RequestBody Map<String, Integer> payload) {
+        Integer userId = payload.get("user_id");
+        Integer postId = payload.get("post_id");
+        if (userId == null || postId == null) {
+            return Result.error("user_id 和 post_id 不能为空");
+        }
+        collectService.collectPost(userId, postId);
+        return Result.success("收藏成功");
+    }
+
+    @DeleteMapping("/post/cancelcollect")
+    public Result cancelCollectPost(@RequestBody Map<String, Integer> payload) {
+        Integer userId = payload.get("user_id");
+        Integer postId = payload.get("post_id");
+        if (userId == null || postId == null) {
+            return Result.error("user_id 和 post_id 不能为空");
+        }
+        collectService.cancelCollectPost(userId, postId);
+        return Result.success("取消收藏成功");
+    }
+
+    @PostMapping("/post/collectStatus")
+    public Result getPostCollectStatus(@RequestBody Map<String, Integer> payload) {
+        Integer userId = payload.get("user_id");
+        Integer postId = payload.get("post_id");
+        if (userId == null || postId == null) {
+            return Result.error("user_id 和 post_id 不能为空");
+        }
+        boolean isCollected = collectService.isPostCollected(userId, postId);
+        Map<String, Object> data = Map.of(
+                "id", postId,
+                "collected", isCollected ? 1 : 0
+        );
+        return Result.success(data);
+    }
+
+    @GetMapping("/post/collectedPosts/{user_id}")
+    public Result getCollectedPosts(@PathVariable("user_id") Integer userId) {
+        List<Post> posts = collectService.getCollectedPostsByUserId(userId);
+        return Result.success(posts);
+    }
+
+    @GetMapping("/post/collectNum/{post_id}")
+    public Result getPostCollectNum(@PathVariable("post_id") Integer postId) {
+        Long count = collectService.getPostCollectCount(postId);
+        Map<String, Long> data = Map.of("num", count);
+        return Result.success(data);
+    }
+
     
 
 
