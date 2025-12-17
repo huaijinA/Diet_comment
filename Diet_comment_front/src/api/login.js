@@ -17,12 +17,12 @@ export function loginApi(userName, password) {
 //获取用户信息
 export function getUserInfo() {
   return request({
-    url: '/userpage',
+    url: '/userpage', //后端接口
     method: 'get',
   })
 }
 
-//发送验证码
+//发送验证码（暂未实现后端）
 export function sendCode(email) {
   return request({
     url: '/register/sendcode', //后端接口
@@ -48,10 +48,10 @@ export function registerApi(userName, password, email, role, code) {
   })
 }
 
-//找回密码
+//找回密码（暂未实现后端）
 export function findPasswordApi(userName, password, email, code) {
   return request({
-    url: '/api/find', //后端接口
+    url: '/find', //后端接口
     method: 'post',
     data: {
       userName,

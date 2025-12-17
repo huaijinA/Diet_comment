@@ -50,8 +50,7 @@
 </template>
 
 <script>
-import { loginApi } from '@/api/login'
-import { getUserInfo } from '@/api/login'
+import { loginApi, getUserInfo } from '@/api/login'
 export default {
   data() {
     return {
@@ -101,7 +100,6 @@ export default {
       try {
         const response = await loginApi(this.username, this.password)
         if (response.data.token !== '') {
-          console.log('nihao1')
           this.error = ''
           this.$store.dispatch('login', response.data.token)
           this.getUserInformation()
@@ -176,7 +174,7 @@ export default {
 .error {
   margin: 6px 0 0 0;
   font-size: 13px;
-  color: var(--danger);
+  color: crimson;
 }
 
 .label {
@@ -270,9 +268,5 @@ input[type='text'] {
   background: #fff;
   font-size: 14px;
   color: #0f172a;
-}
-
-.error {
-  color: crimson;
 }
 </style>

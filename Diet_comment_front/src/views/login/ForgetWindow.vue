@@ -29,8 +29,7 @@
   </div>
 </template>
 <script>
-import { findPasswordApi } from '@/api/login'
-import { sendCode } from '@/api/login'
+import { findPasswordApi, sendCode } from '@/api/login'
 export default {
   name: 'RegisterWindow',
   data() {
@@ -171,7 +170,6 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
   gap: 15px;
-  width: 100%;
 }
 
 .user {
@@ -201,7 +199,6 @@ input[type='emailcode'] {
   display: flex;
   gap: 12px;
   width: 100%;
-  display: flex;
 }
 .confirm-btn {
   flex: 1;

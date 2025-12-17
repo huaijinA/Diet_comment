@@ -13,7 +13,7 @@ export function changeUserInfo(userName, email, avatarImage) {
   }
   return request({
     url: '/userpage',
-    method: 'post',
+    method: 'put',
     data: formData,
     headers: {
       'Content-Type': 'multipart/form-data', //设置请求头
@@ -22,14 +22,21 @@ export function changeUserInfo(userName, email, avatarImage) {
 }
 
 //修改密码
-export function changePassword(oldpwd, newpwd){
+export function changePassword(oldpwd, newpwd) {
   return request({
     url: '/userpage/pwdput',
     method: 'post',
-    data:{
+    data: {
       oldpwd,
       newpwd,
-    }
+    },
   })
 }
-//注释注释注释注释注释注释
+
+//获取用户信息
+export function getUserInfoById(user_id) {
+  return request({
+    url: '/user/' + user_id,
+    method: 'get',
+  })
+}

@@ -1,20 +1,23 @@
 <template>
   <div class="page">
     <header class="header">
-      <button class="home" @click="mainWindow">返回主页</button>
+      <button class="home" @click="goBack">返回</button>
       <div class="person">
-        <img :src="userInfo.avatarUrl" />
+        <img :src="userInfo.avatarUrl" :alt="用户头像" />
         <div>{{ userInfo.userName }}</div>
-        <span class="headbutton">
+        <span class="headbutton" v-if="userInfo.id == localuserInfo.id">
           <button @click="edit">编辑资料</button>
           <button @click="changePassword">修改密码</button>
+        </span>
+        <span class="email" v-else>
+          <span>邮箱：{{ userInfo.email }} </span>
         </span>
       </div>
     </header>
     <nav class="nav">
       <span class="category">
         <button
-          v-for="cate in ['我的动态', '帖子收藏', '关注店铺']"
+          v-for="cate in ['美食动态', '帖子收藏', '关注店铺']"
           :key="cate"
           :class="{ active: category === cate }"
           @click="changeCategory(cate)"
@@ -30,32 +33,57 @@
 
     <div class="border"></div>
 
-    <main class="main">
-      <section v-if="category == '我的动态'">
-        <span class="total"> 共 {{ filtered.length }} 条动态 </span>
-        <div class="warn" v-if="filtered.length == 0">
-          <img :src="backImg" />
+    <div v-if="isDeleteModalVisible" class="delete-modal-mask" @click.self="closeDeleteWindow">
+      <div class="delete-modal">
+        <p class="modal-tip">确定要删除这条帖子吗？此操作无法撤销。</p>
+        <div class="modal-buttons">
+          <button @click="deletePost" class="confirm-btn">确定</button>
+          <button @click="closeDeleteWindow" class="cancel-btn">取消</button>
         </div>
-        <!-- <ul class="cards">
-          <li v-for="news in pagedData" :key="news.id" class="card">
-            <img :src="news.imgurl" alt="帖子封面" />
-            <div class="card-body">
-              <div class="row top">
-                <h4 class="name">{{ news.title }}</h4>
-              </div>
-              <div class="meta">
-                <div class="rating">
-                  <span class="reviews">{{ shop.reviews }}条评论</span>
-                </div>
-                <div class="tags">
-                  <span v-for="tag in news.shop.tags" :key="tag" class="tag">{{ tag }}</span>
-                </div>
-                <p class="address">{{ news.shop.shopname }}</p>
-                <p class="address">{{ news.shop.address }}</p>
-              </div>
+      </div>
+    </div>
+
+    <main class="main">
+      <section v-if="category == '美食动态'">
+        <div class="head">
+          <span class="total"> 共 {{ filtered.length }} 条动态 </span>
+          <span>
+            <button @click="choice">{{ !Flag ? '删除' : '取消' }}</button>
+          </span>
+        </div>
+        <div class="warn" v-if="filtered.length == 0">
+          <img :src="backImg" :alt="默认图片" />
+        </div>
+        <ul class="postcards">
+          <li v-for="post in pagedData" :key="post.id" class="postcard" @click="goPost(post)">
+            <div class="posthead">
+              <span>
+                <span class="time">{{ post.createdAt }}</span>
+              </span>
+              <span v-if="Flag">
+                <button @click.stop="openDeleteWindow(post)" class="delete">🗑️删除</button>
+              </span>
+            </div>
+            <div class="title">{{ post.title }}</div>
+            <div class="content">{{ post.content }}</div>
+            <div class="image" v-if="(post.imgurls || []).length <= 3">
+              <span v-for="image in post.imgurls" :key="image">
+                <img :src="image" :alt="帖子图片" />
+              </span>
+            </div>
+            <div class="image" v-else>
+              <span>
+                <img :src="post.imgurls[0]" :alt="帖子图片1" />
+                <img :src="post.imgurls[1]" :alt="帖子图片2" />
+                <img :src="post.imgurls[2]" :alt="帖子图片3" />
+              </span>
+            </div>
+            <div class="postshop" v-if="JSON.stringify(post.shop) != '{}'">
+              <div class="shopname">🏠{{ post.shop.name }}</div>
+              <div class="shopaddress">{{ post.shop.address }}</div>
             </div>
           </li>
-        </ul> -->
+        </ul>
         <div class="pager">
           <button @click="prevPage" :disabled="page === 1">上一页</button>
           <span>
@@ -69,32 +97,39 @@
       <section v-if="category == '帖子收藏'">
         <span class="total"> 共 {{ filtered.length }} 条帖子 </span>
         <div class="warn" v-if="filtered.length == 0">
-          <img :src="backImg" />
+          <img :src="backImg" :alt="默认图片" />
         </div>
-        <!-- <ul class="cards">
-          <li v-for="collected in pagedData" :key="collected.id" class="card">
-            <img :src="collected.imgurl" alt="帖子封面" />
-            <div class="card-body">
-              <div class="row top">
-                <h4 class="name">{{ collected.title }}</h4>
-              </div>
-              <div class="meta">
-                <div class="rating">
-                  <span class="reviews">{{ collected.reviews }}条评论</span>
-                </div>
-                <div class="tags">
-                  <span v-for="tag in collected.shop.tags" :key="tag" class="tag">{{ tag }}</span>
-                </div>
-                <p class="address">{{ collected.shop.shopname }}</p>
-                <p class="address">{{ collected.shop.address }}</p>
-                <div class="author">
-                  <img :src="collected.user.avatarUrl" />
-                  <span>{{ collected.user.userName }}</span>
-                </div>
-              </div>
+        <ul class="postcards">
+          <li v-for="post in pagedData" :key="post.id" class="postcard" @click="goPost(post)">
+            <div class="posthead">
+              <span class="postuser">
+                <img :src="post.user.avatar" :alt="用户头像" />
+                <span class="postusername">{{ post.user.username }}</span>
+              </span>
+              <span>
+                <span class="time">{{ post.createdAt }}</span>
+              </span>
+            </div>
+            <div class="title">{{ post.title }}</div>
+            <div class="content">{{ post.content }}</div>
+            <div class="image" v-if="(post.imgurls || []).length <= 3">
+              <span v-for="image in post.imgurls" :key="image">
+                <img :src="image" :alt="帖子图片" />
+              </span>
+            </div>
+            <div class="image" v-else>
+              <span>
+                <img :src="post.imgurls[0]" :alt="帖子图片1" />
+                <img :src="post.imgurls[1]" :alt="帖子图片2" />
+                <img :src="post.imgurls[2]" :alt="帖子图片3" />
+              </span>
+            </div>
+            <div class="postshop" v-if="JSON.stringify(post.shop) != '{}'">
+              <div class="shopname">🏠{{ post.shop.name }}</div>
+              <div class="shopaddress">{{ post.shop.address }}</div>
             </div>
           </li>
-        </ul> -->
+        </ul>
         <div class="pager">
           <button @click="prevPage" :disabled="page === 1">上一页</button>
           <span>
@@ -118,20 +153,19 @@
           <span class="total"> 共 {{ filtered.length }} 家店 </span>
         </div>
         <div class="warn" v-if="filtered.length == 0">
-          <img :src="backImg" />
+          <img :src="backImg" :alt="默认图片" />
         </div>
         <ul class="cards">
-          <li v-for="shop in pagedData" :key="shop.id" class="card">
+          <li v-for="shop in pagedData" :key="shop.id" class="card" @click="goShop(shop)">
             <img :src="shop.imgurl" alt="店铺封面" />
             <div class="card-body">
               <div class="row top">
-                <h4 class="name">{{ shop.shopname }}</h4>
-                <button class="fav" @click="toggleFav(shop)">{{ shop.fav ? '★' : '☆' }}</button>
+                <h4 class="name">{{ shop.name }}</h4>
               </div>
               <div class="meta">
                 <div class="rating">
                   <span class="score">{{ shop.rating.toFixed(1) }}</span>
-                  <span class="stars" v-html="renderStars(shop.rating)"></span>
+                  <span class="imgrating2" v-html="renderStarsHtml(shop.rating)"></span>
                   <span class="reviews">（{{ shop.reviews }}条点评）</span>
                 </div>
                 <div class="tags">
@@ -139,7 +173,6 @@
                 </div>
                 <div class="info">
                   <span>人均 ¥{{ shop.price }}</span>
-                  <span> · {{ shop.distance }}km</span>
                 </div>
                 <p class="address">{{ shop.address }}</p>
               </div>
@@ -160,12 +193,15 @@
   </div>
 </template>
 <script>
-import { getShopInfo } from '@/api/shop'
 import backImg from '@/assets/back1.jpg'
+import { getUserPosts, deletePosts, collectedPosts } from '@/api/post'
+import { getImage } from '@/api/image'
+import { collectedShops, getShopInfoById } from '@/api/shop'
+import { getUserInfoById } from '@/api/user'
 export default {
   data() {
     return {
-      category: '我的动态',
+      category: '美食动态',
       page: 1,
       changepage: 1,
       oldPassword: '',
@@ -175,6 +211,9 @@ export default {
       perPage: 12,
       sortBy: 'rating',
       backImg,
+      Flag: false,
+      isDeleteModalVisible: false,
+      deleteId: null,
       userInfo: {
         id: '',
         userName: '',
@@ -182,6 +221,7 @@ export default {
         avatarUrl: '',
         role: '',
       },
+      localuserInfo: null,
       shops: [],
       myposts: [],
       collectedposts: [],
@@ -190,9 +230,12 @@ export default {
   },
   created() {
     this.loadUserInfo()
+    //load美食动态
+    this.loadMyPost()
+    //load关注店铺信息
     this.loadShopInfo()
-    //load动态
-    //load帖子
+    //load帖子收藏
+    this.loadPostInfo()
   },
   watch: {
     presearch(value) {
@@ -210,26 +253,26 @@ export default {
   computed: {
     filtered() {
       const searchs = this.search.trim().toLowerCase()
-      if (this.category == '我的动态') {
-        //后续需要修改
+      if (this.category == '美食动态') {
         return this.myposts.filter(
           (s) =>
             !searchs ||
-            s.tags.includes(searchs) ||
-            s.shop.shopname.toLowerCase().includes(searchs.toLowerCase()) ||
-            s.shop.address.toLowerCase().includes(searchs.toLowerCase()) ||
-            s.title.toLowerCase().includes(searchs.toLowerCase()),
+            s.shop?.tags.includes(searchs) ||
+            s.shop?.name.toLowerCase().includes(searchs.toLowerCase()) ||
+            s.shop?.address.toLowerCase().includes(searchs.toLowerCase()) ||
+            s.title.toLowerCase().includes(searchs.toLowerCase()) ||
+            s.content.toLowerCase().includes(searchs.toLowerCase()),
         )
       } else if (this.category == '帖子收藏') {
-        //后续需要修改
         return this.collectedposts.filter(
           (s) =>
             !searchs ||
-            s.tags.includes(searchs) ||
-            s.shop.shopname.toLowerCase().includes(searchs.toLowerCase()) ||
-            s.shop.address.toLowerCase().includes(searchs.toLowerCase()) ||
+            s.shop?.tags.includes(searchs) ||
+            s.shop?.name.toLowerCase().includes(searchs.toLowerCase()) ||
+            s.shop?.address.toLowerCase().includes(searchs.toLowerCase()) ||
             s.title.toLowerCase().includes(searchs.toLowerCase()) ||
-            s.user.userName.toLowerCase().includes(searchs.toLowerCase()),
+            s.content.toLowerCase().includes(searchs.toLowerCase()) ||
+            s.user?.username.toLowerCase().includes(searchs.toLowerCase()),
         )
       } else if (this.category == '关注店铺') {
         return this.shops
@@ -237,7 +280,7 @@ export default {
             (s) =>
               !searchs ||
               s.tags.includes(searchs) ||
-              s.shopname.toLowerCase().includes(searchs.toLowerCase()) ||
+              s.name.toLowerCase().includes(searchs.toLowerCase()) ||
               s.address.toLowerCase().includes(searchs.toLowerCase()),
           )
           .sort((a, b) => {
@@ -259,30 +302,132 @@ export default {
   },
   methods: {
     loadUserInfo() {
-      const userinfo = JSON.parse(localStorage.getItem('userInfo'))
+      const userinfo = JSON.parse(localStorage.getItem('oneUser'))
+      this.localuserInfo = JSON.parse(localStorage.getItem('userInfo'))
       if (userinfo) {
         this.userInfo.id = userinfo.id
         this.userInfo.userName = userinfo.userName
         this.userInfo.email = userinfo.email
         this.userInfo.avatarUrl = userinfo.avatarUrl
         this.userInfo.role = userinfo.role
+      } else {
+        this.userInfo.id = this.localuserinfo.id
+        this.userInfo.userName = this.localuserinfo.userName
+        this.userInfo.email = this.localuserinfo.email
+        this.userInfo.avatarUrl = this.localuserinfo.avatarUrl
+        this.userInfo.role = this.localuserinfo.role
+      }
+    },
+    async loadMyPost() {
+      try {
+        const response = await getUserPosts(this.userInfo.id)
+        if (response.code == 1) {
+          this.myposts = response.data.map((post) => ({
+            ...post,
+            imgurls: [],
+          }))
+          const postIds = this.myposts.map((c) => c.id)
+          const imgurlRes = await Promise.all(
+            postIds.map((id) => getImage('post', id).then((res) => ({ id, res }))),
+          )
+          imgurlRes.forEach(({ id, res }) => {
+            if (res.code === 1) {
+              const post = this.myposts.find((c) => c.id === id)
+              if (post) post.imgurls = res.data
+            }
+          })
+        } else {
+          console.log('获取失败')
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async loadShopInfo() {
+      try {
+        const response = await collectedShops(this.userInfo.id)
+        if (response.code == 1) {
+          this.shops = response.data
+        } else {
+          this.error = '获取失败'
+        }
+      } catch (e) {
+        console.log(e)
+        this.error = '获取失败'
+      }
+    },
+    async loadPostInfo() {
+      try {
+        const response = await collectedPosts(this.userInfo.id)
+        if (response.code == 1) {
+          this.collectedposts = response.data.map((post) => ({
+            ...post,
+            user: {},
+            shop: {},
+            imgurls: [],
+          }))
+          const postIds = this.collectedposts.map((c) => c.id)
+          const imgurlRes = await Promise.all(
+            postIds.map((id) => getImage('post', id).then((res) => ({ id, res }))),
+          )
+          imgurlRes.forEach(({ id, res }) => {
+            if (res.code === 1) {
+              const post = this.collectedposts.find((c) => c.id === id)
+              if (post) post.imgurls = res.data
+            }
+          })
+          const userIds = this.collectedposts.map((c) => c.userId)
+          const userRes = await Promise.all(userIds.map((id) => getUserInfoById(id)))
+          userRes.forEach((res) => {
+            if (res.code === 1) {
+              const targetPosts = this.collectedposts.filter((post) => post.userId === res.data.id)
+              targetPosts.forEach((post) => {
+                post.user = res.data
+              })
+            }
+          })
+          const shopIds = this.collectedposts.map((c) => c.shopId)
+          const shopRes = await Promise.all(shopIds.map((id) => getShopInfoById(id)))
+          shopRes.forEach((res) => {
+            if (res.code === 1) {
+              const targetPosts = this.collectedposts.filter((post) => post.shopId === res.data.id)
+              targetPosts.forEach((post) => {
+                post.shop = res.data
+              })
+            }
+          })
+          console.log(this.collectedposts)
+        } else {
+          console.log('获取失败')
+          this.error = '获取失败'
+        }
+      } catch (e) {
+        console.log(e)
       }
     },
     changeCategory(cate) {
       this.category = cate
       this.page = 1
       this.changepage = this.page
-      console.log(this.category)
+      if (this.category == '关注店铺') {
+        this.perPage = 12
+      } else if (this.category == '帖子收藏') {
+        this.perPage = 12
+      } else if (this.category == '美食动态') {
+        this.perPage = 12
+      }
     },
     prevPage() {
       if (this.page > 1) {
         this.page--
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
       this.changepage = this.page
     },
     changePage() {
       if (this.changepage > 0 && this.changepage <= this.totalPages) {
         this.page = this.changepage
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       } else {
         this.changepage = this.page
       }
@@ -290,6 +435,7 @@ export default {
     nextPage() {
       if (this.page < this.totalPages) {
         this.page++
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
       this.changepage = this.page
     },
@@ -302,34 +448,66 @@ export default {
       while (html.length < 5) html += '☆'
       return html
     },
-    //后续需修改
-    async loadShopInfo() {
-      try {
-        const response = await getShopInfo()
-        if (response.code == 1) {
-          this.shops = response.data
-          this.$store.dispatch('getShopInfo', this.shops)
-        } else {
-          this.error = '获取失败'
-        }
-      } catch (e) {
-        console.log(e)
-        this.error = '获取失败'
-      }
-      this.shops = JSON.parse(localStorage.getItem('shopInfo'))
-    },
     edit() {
       this.$router.push({ path: '/UserInfo' })
     },
     changePassword() {
       this.$router.push({ path: '/ChangePassword' })
     },
-    mainWindow() {
-      this.$router.push({ path: '/' })
+    goBack() {
+      this.$router.back()
+      this.$store.dispatch('clearOneUser')
     },
     searchFor() {
       this.search = this.presearch
       this.page = 1
+    },
+    goPost(post) {
+      this.$store.dispatch('getOnePost', post)
+      this.$router.push({ path: '/PostWindow' })
+    },
+    goShop(shop) {
+      this.$store.dispatch('getOneShop', shop)
+      this.$router.push({ path: '/ShopWindow' })
+    },
+    choice() {
+      this.Flag = !this.Flag
+    },
+    openDeleteWindow(post) {
+      this.isDeleteModalVisible = true
+      this.deleteId = post.id
+    },
+    closeDeleteWindow() {
+      this.isDeleteModalVisible = false
+      this.deleteId = null
+    },
+    deletePost() {
+      try {
+        const response = deletePosts(this.deleteId)
+        if (response.code == 1) {
+          this.loadMyPost()
+          alert('删除成功')
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    renderStarsHtml(rating) {
+      const r = Number(rating) || 0
+      const full = Math.floor(r)
+      const half = r - full >= 0.5 ? 1 : 0
+      const empty = 5 - full - half
+      let html = ''
+      for (let i = 0; i < full; i++) {
+        html += '<span class="star star-full">★</span>'
+      }
+      if (half) {
+        html += '<span class="star star-half">★</span>'
+      }
+      for (let i = 0; i < empty; i++) {
+        html += '<span class="star star-empty">★</span>'
+      }
+      return html
     },
   },
 }
@@ -360,10 +538,10 @@ export default {
   padding: 5px;
   width: 70px;
   height: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 5px;
   border-width: 1px;
   background: linear-gradient(135deg, rgba(255, 154, 38, 0.461) 0%, rgba(253, 219, 52, 0.08) 100%);
-  border: 1px solid rgba(0, 0, 0, 0.12);
   cursor: pointer;
 }
 .person {
@@ -387,6 +565,10 @@ export default {
   background: linear-gradient(135deg, rgba(255, 154, 38, 0.461) 0%, rgba(253, 219, 52, 0.08) 100%);
   width: 100px;
   cursor: pointer;
+}
+.email {
+  font-size: 13px;
+  color: #8f8f8f;
 }
 .nav {
   display: flex;
@@ -413,11 +595,16 @@ export default {
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-.nav button {
-  padding: 7px;
+.head {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+.head button {
+  padding: 5px;
+  width: 70px;
   border-radius: 7px;
-  margin: 0px 5px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-width: 1px;
   background: linear-gradient(135deg, rgba(255, 154, 38, 0.461) 0%, rgba(253, 219, 52, 0.08) 100%);
   cursor: pointer;
 }
@@ -431,7 +618,122 @@ export default {
   flex-direction: column;
   padding: 9px;
 }
-
+/* 帖子 */
+.postcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 30px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.postcard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 12px;
+  background: #fff6e8;
+  padding: 15px;
+  border-radius: 8px;
+  align-items: flex-start;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+  margin: 5px 10px 5px 10px;
+}
+.posthead {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1px;
+}
+.postuser {
+  display: flex;
+  gap: 13px;
+  font-size: 10px;
+  align-items: center;
+}
+.postusername {
+  display: flex;
+  font-size: 15px;
+}
+.postuser img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 0, 0, 0.06);
+}
+.time {
+  height: 100%;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  color: #b3b3b3;
+  /* 只显示年月日 */
+  font-family: monospace;
+  width: 10ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: right;
+}
+.delete {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: black;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.image {
+  width: 100%;
+}
+.image img {
+  width: 140px;
+  height: 160px;
+  margin-right: 10px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.title {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+}
+.content {
+  font-size: 13px;
+  color: rgb(99, 99, 98);
+  padding: 5px;
+  line-height: 2.2;
+  /* 截断 */
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+.postshop {
+  width: 100%;
+  justify-items: end;
+}
+.shopname {
+  font-size: 13px;
+}
+.shopaddress {
+  font-size: 10px;
+  color: #b3b3b3;
+}
+/* 店铺 */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(385px, 1fr));
@@ -572,5 +874,67 @@ export default {
 .border {
   margin: 15px 15px 0px 15px;
   border: 1px solid #000;
+}
+
+/* 删除窗口 */
+.delete-modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* 确保在最上层 */
+}
+
+/* 模态框主体：白色卡片 */
+.delete-modal {
+  width: 320px;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+/* 提示文字 */
+.modal-tip {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 20px;
+}
+/* 按钮容器：水平排列 */
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+/* 取消按钮：灰色 */
+.cancel-btn {
+  padding: 8px 16px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cancel-btn:hover {
+  background-color: #f5f5f5;
+}
+/* 确定按钮：红色（警示色） */
+.confirm-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ff4d4f;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.confirm-btn:hover {
+  background-color: #ff3b30;
 }
 </style>
