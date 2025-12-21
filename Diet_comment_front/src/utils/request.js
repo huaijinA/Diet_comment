@@ -3,8 +3,7 @@ import { ElMessage } from 'element-plus'
 
 // 创建axios实例
 const service = axios.create({
-  // baseURL: process.env.BASE_API,
-  baseURL: 'http://localhost:8080', // 从环境变量获取基础URL
+  baseURL: '/api', // 基础URL
   timeout: 30000,
 })
 
@@ -13,8 +12,9 @@ service.interceptors.request.use(
   (config) => {
     // 在发送请求之前做些什么
     const token = localStorage.getItem('token')
+    console.log('请求拦截器中的token:', token)
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
+      config.headers['token'] = token;
     }
     return config
   },

@@ -99,15 +99,15 @@ export default {
       this.loading = true
       try {
         const response = await loginApi(this.username, this.password)
-        if (response.data.token !== '') {
+        if (response.data !== '') {
           this.error = ''
-          this.$store.dispatch('login', response.data.token)
+          this.$store.dispatch('login', response.data)
           this.getUserInformation()
           setTimeout(() => {
             this.$router.push('/')
           }, 1000)
         } else {
-          console.log(response.data.token)
+          console.log(response.data)
           this.error = response.messageConfig
         }
       } catch (error) {
