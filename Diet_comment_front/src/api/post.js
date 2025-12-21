@@ -15,10 +15,10 @@ export function getUserPosts(user_id) {
   })
 }
 
-//获取帖子页面(主页)(暂定)
+//获取帖子页面(主页)
 export function getMainPosts() {
   return request({
-    url: '/post/mainpage',
+    url: '/homepage',
     method: 'get',
   })
 }

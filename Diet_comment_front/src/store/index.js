@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     // 初始化
-    token: JSON.parse(localStorage.getItem('token')) || null,
+    token: localStorage.getItem('token') || null,
     userInfo: JSON.parse(localStorage.getItem('userInfo')) || null,
     shopInfo: JSON.parse(localStorage.getItem('shopInfo')) || null,
     postInfo: JSON.parse(localStorage.getItem('postInfo')) || null,
@@ -20,7 +20,7 @@ export default createStore({
     },
     setToken(state, token) {
       state.token = token
-      localStorage.setItem('token', JSON.stringify(token))
+      localStorage.setItem('token', token)
     },
     setShopInfo(state, shopInfo) {
       state.shopInfo = shopInfo
