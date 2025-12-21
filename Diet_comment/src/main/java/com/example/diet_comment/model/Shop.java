@@ -100,7 +100,7 @@ public class Shop {
     // 评分 (数据库为 FLOAT 或 DECIMAL，Java 用 BigDecimal 或 Double)
     // 推荐使用 BigDecimal 以保持浮点数精度
     @TableField("rating")
-    private BigDecimal rating;
+    private Double rating;
 
     // 评论数量 (数据库为 INT)
     @TableField("reviews")
@@ -114,7 +114,7 @@ public class Shop {
     @TableField("imgurl")
     private String imgurl;
 
-    // 标签 (数据库为 JSON 或 VARCHAR)
+    // 标签 (数据库为 JSON )
     @TableField("tags")
     private String tags;
 
@@ -153,11 +153,11 @@ public class Shop {
         this.name = name;
     }
 
-    public BigDecimal getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(BigDecimal rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 

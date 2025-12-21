@@ -13,6 +13,5 @@ public interface UserService extends IService<User> {
 	public String login(User user);
 	UserDTO getUserDTOById(Integer id);
 	Result pwdchange(Integer userId, String oldpwd, String newpwd);
-
-	
+    User getByUserName(String userName);
 }

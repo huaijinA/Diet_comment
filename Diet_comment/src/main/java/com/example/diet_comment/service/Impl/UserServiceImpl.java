@@ -99,5 +99,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			return Result.error("Failed to change password");
 		}
 	}
-	
+
+    @Override
+    public User getByUserName(String userName) {
+        return this.getOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<User>().eq("username", userName));
+    }
+
+
 }

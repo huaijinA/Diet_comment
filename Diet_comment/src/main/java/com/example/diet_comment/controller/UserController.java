@@ -45,33 +45,45 @@ public class UserController {
 
 
 
-    @PutMapping(value = "/userpage",consumes = "multipart/form-data")
-    public Result updateUserInfo( HttpServletRequest request,@RequestParam(required = false) String userName,
-	@RequestParam(required = false) MultipartFile image) {
-        System.out.println("username"+userName);
+    @PutMapping(value = "/userpage", consumes = "multipart/form-data")
+    public Result updateUserInfo(HttpServletRequest request,
+                                 @RequestParam(required = false) String userName,
+                                 @RequestParam(required = false) String email,
+                                 @RequestParam(required = false) MultipartFile image) {
         Integer currentUserId = (Integer) request.getAttribute("userId");
         User user = userService.getById(currentUserId);
 
-
-
-
-
-
-		if(userName!=null && !userName.isEmpty()) {
-			user.setUserName(userName);
-		}
-
-		if(image!=null && !image.isEmpty()) {
-			String avatarUrl = imageService.uploadImageById(currentUserId,image,"user");
-			user.setAvatarUrl(avatarUrl);
-		}
-
-		if(userService.updateById(user)) {
-
-            return Result.success();
+        // 先校验用户名是否被其他用户占用（需要在 UserService 中提供 getByUserName 方法）
+        if (userName != null && !userName.isEmpty()) {
+            User exist = userService.getByUserName(userName);
+            if (exist != null && !exist.getId().equals(currentUserId)) {
+                return Result.error("用户名已存在");
+            }
+            user.setUserName(userName);
         }
-        return Result.error("Update failed");
-	}
+
+        if (email != null && !email.isEmpty()) {
+            user.setEmail(email);
+        }
+
+        if (image != null && !image.isEmpty()) {
+            String avatarUrl = imageService.uploadImageById(currentUserId, image, "user");
+            user.setAvatarUrl(avatarUrl);
+        }
+
+        try {
+            if (userService.updateById(user)) {
+                return Result.success();
+            } else {
+                return Result.error("Update failed");
+            }
+        } catch (org.springframework.dao.DuplicateKeyException ex) {
+            // 安全兜底：如果数据库唯一索引仍然抛出异常，返回友好提示
+            return Result.error(ex.getMessage());
+        } catch (Exception ex) {
+            return Result.error("Update failed"+ex.getMessage());
+        }
+    }
 
 	@GetMapping("/user/{id}")
 	public Result getUserById(@PathVariable Integer id) {

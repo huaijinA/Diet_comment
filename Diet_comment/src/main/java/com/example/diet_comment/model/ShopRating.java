@@ -1,6 +1,8 @@
 package com.example.diet_comment.model;
 
 import com.baomidou.mybatisplus.annotation.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @TableName("shop_rating")
@@ -16,7 +18,7 @@ public class ShopRating {
     private Integer shopId;
 
     @TableField("rating")
-    private Integer rating;
+    private Double rating;
 
     @TableField(value = "created_at", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
@@ -47,11 +49,11 @@ public class ShopRating {
         this.shopId = shopId;
     }
 
-    public Integer getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
