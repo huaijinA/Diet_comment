@@ -3,8 +3,7 @@ import { ElMessage } from 'element-plus'
 
 // 创建axios实例
 const service = axios.create({
-  // baseURL: process.env.BASE_API,
-  baseURL: 'http://localhost:8080', // 从环境变量获取基础URL
+  baseURL: '/api', // 基础URL
   timeout: 30000,
 })
 
