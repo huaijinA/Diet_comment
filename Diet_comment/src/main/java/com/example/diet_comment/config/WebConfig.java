@@ -20,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(loginCheck)
 				.addPathPatterns("/**") // 拦截所有请求
 				.excludePathPatterns(
+                        "images/**",
 						"/login",
 						"/register",
                         "/error"
