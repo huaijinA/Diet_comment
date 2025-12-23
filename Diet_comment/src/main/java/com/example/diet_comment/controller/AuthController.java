@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 @RestController
 public class AuthController {
 
@@ -20,11 +22,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public Result register(@RequestBody User user) {
-		boolean success = userService.register(user);
-       if(success) {
+		String mes = userService.register(user);
+       if(Objects.equals(mes, "success")) {
            return Result.success("Registration successful");
        }
-       return Result.error("Registration failed");
+       return Result.error(mes);
     }
 
     @PostMapping("/login")

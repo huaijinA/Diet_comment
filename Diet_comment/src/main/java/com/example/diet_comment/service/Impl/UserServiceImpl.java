@@ -19,22 +19,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     //register, login 等方法的具体逻辑
 
 	@Override
-	public boolean register(User user) {
+	public String register(User user) {
 		String email = user.getEmail();
 		String userName = user.getUserName();
 		String password = user.getPassword();
 
 		if (email == null || email.isEmpty() || userName == null || userName.isEmpty()) {
-			return false; // 无效输入
+			return "无效输入"; // 无效输入
 		}
 		if (this.count(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<User>().eq("email", email)) > 0) {
-			return false; // 邮箱已存在
+			return "邮箱已存在"; // 邮箱已存在
 		}
 		if (this.count(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<User>().eq("username", userName)) > 0) {
-			return false; // 用户名已存在
+			return "用户名已存在"; // 用户名已存在
 		}
 		if (password == null || password.isEmpty()) {
-			return false; // 密码不能为空
+			return "密码不能为空"; // 密码不能为空
 		}
 
 		String passwordHash = PasswordUtils.hashPassword(password);
@@ -42,7 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 		this.save(user);
 
-		return true;
+		return "success";
 
 	}
 
