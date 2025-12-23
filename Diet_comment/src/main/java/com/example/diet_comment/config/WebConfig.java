@@ -21,6 +21,8 @@ public class WebConfig implements WebMvcConfigurer {
 				.addPathPatterns("/**") // 拦截所有请求
 				.excludePathPatterns(
                         "/images/**",
+                        "/send-code",
+                        "/favicon.ico",
 						"/login",
 						"/register",
                         "/error"

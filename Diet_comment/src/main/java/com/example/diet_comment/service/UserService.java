@@ -1,5 +1,6 @@
 package com.example.diet_comment.service;
 
+import com.example.diet_comment.model.DTO.UserReg;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -9,7 +10,7 @@ import com.example.diet_comment.model.DTO.UserDTO;
 
 public interface UserService extends IService<User> {
     //定义 register, login 等方法
-	public String register(User user);
+	public String register(UserReg user);
 	public String login(User user);
 	UserDTO getUserDTOById(Integer id);
 	Result pwdchange(Integer userId, String oldpwd, String newpwd);

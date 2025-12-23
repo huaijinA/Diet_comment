@@ -2,27 +2,41 @@ package com.example.diet_comment.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.diet_comment.mapper.UserMapper;
+import com.example.diet_comment.model.DTO.UserReg;
 import com.example.diet_comment.model.Result;
 import com.example.diet_comment.model.User;
 import com.example.diet_comment.model.DTO.UserDTO;
+import com.example.diet_comment.service.EmailService;
 import com.example.diet_comment.service.UserService;
 import com.example.diet_comment.utils.Jwt;
 import com.example.diet_comment.utils.PasswordUtils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     //register, login 等方法的具体逻辑
 
-	@Override
-	public String register(User user) {
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    private static final String VERIFICATION_CODE_KEY_PREFIX = "verification_code:";
+    @Autowired
+    private EmailService emailService;
+
+    @Override
+	public String register(UserReg user) {
 		String email = user.getEmail();
 		String userName = user.getUserName();
 		String password = user.getPassword();
+        String code = user.getCode();
 
 		if (email == null || email.isEmpty() || userName == null || userName.isEmpty()) {
 			return "无效输入"; // 无效输入
@@ -37,10 +51,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			return "密码不能为空"; // 密码不能为空
 		}
 
+
+
+        String redisCode = (String) redisTemplate.opsForValue().get(VERIFICATION_CODE_KEY_PREFIX + email);
+        if (redisCode == null) {
+            return "验证码已过期，请重新获取";
+        }
+        if (!Objects.equals(redisCode, code)) {
+            return "验证码错误";
+        }
+
+
+
 		String passwordHash = PasswordUtils.hashPassword(password);
 		user.setPassword(passwordHash);
+        User newUser = user.toUserEntity();
 
-		this.save(user);
+		this.save(newUser);
+        redisTemplate.delete(VERIFICATION_CODE_KEY_PREFIX + email);
 
 		return "success";
 
