@@ -9,7 +9,7 @@ export function changeUserInfo(userName, email, avatarImage) {
   formData.append('userName', userName)
   formData.append('email', email)
   if (avatarImage) {
-    formData.append('avatarImage', avatarImage)
+    formData.append('image', avatarImage)
   }
   return request({
     url: '/userpage',
