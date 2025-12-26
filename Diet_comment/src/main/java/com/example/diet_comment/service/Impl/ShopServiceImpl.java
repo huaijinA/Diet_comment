@@ -1,11 +1,9 @@
 package com.example.diet_comment.service.Impl;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.diet_comment.mapper.ShopMapper;
 import com.example.diet_comment.mapper.ShopRatingMapper;
-import com.example.diet_comment.model.Post;
 import com.example.diet_comment.model.Shop;
 import com.example.diet_comment.model.ShopRating;
 import com.example.diet_comment.service.ShopService;
@@ -15,9 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Service
-public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements ShopService {
+public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements ShopService {
 
     @Autowired
     private ShopRatingMapper shopRatingMapper;
@@ -28,16 +25,14 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements Sho
                 com.baomidou.mybatisplus.core.toolkit.Wrappers.<Shop>lambdaQuery()
                         .select(Shop::getId)
                         .eq(Shop::getName, shopName)
-                        .last("limit 1")
-        ).stream().findFirst().orElse(null);
+                        .last("limit 1"))
+                .stream().findFirst().orElse(null);
         if (id == null) {
             System.out.println("LOG:null");
             return null;
-        }
-        else return Integer.parseInt(id.toString());
+        } else
+            return Integer.parseInt(id.toString());
     }
-
-
 
     @Override
     public List<Shop> searchShopsByKeyword(String keyword) {
@@ -50,7 +45,6 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements Sho
     @Override
     @Transactional // 建议添加事务，确保评分和店铺信息更新的原子性
     public void addShopRating(ShopRating shopRating) {
-
 
         // 插入新的评分记录
         // 1. 根据 userId 和 shopId 查询是否已存在评分记录
@@ -72,13 +66,36 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements Sho
 
     }
 
-    public Shop getShopByShopId(Integer shopId){
-        if(shopId==null||shopId<=0){
+    public Shop getShopByShopId(Integer shopId) {
+        if (shopId == null || shopId <= 0) {
             return null;
         }
         return this.getById(shopId);
     }
 
+    @Override
+    public Double getUserRating(Integer userId, Integer shopId) {
+        if (userId == null || shopId == null) {
+            return null;
+        }
+        QueryWrapper<ShopRating> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        queryWrapper.eq("shop_id", shopId);
+        ShopRating existingRating = shopRatingMapper.selectOne(queryWrapper);
+        if (existingRating == null) {
+            return null;
+        }
+        return existingRating.getRating();
+    }
 
-
+    @Override
+    public void deleteUserRating(Integer userId, Integer shopId) {
+        if (userId == null || shopId == null) {
+            return;
+        }
+        QueryWrapper<ShopRating> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        queryWrapper.eq("shop_id", shopId);
+        shopRatingMapper.delete(queryWrapper);
+    }
 }
