@@ -2,7 +2,7 @@ import request from '@/utils/request'
 //获取店铺信息
 export function getShopInfo() {
   return request({
-    url: '/shopInfo',
+    url: '/shop',
     method: 'get',
   })
 }
@@ -10,7 +10,7 @@ export function getShopInfo() {
 //获取店铺信息2
 export function getShopInfoById(shop_id) {
   return request({
-    url: '/shopInfo/' + shop_id,
+    url: '/shop/' + shop_id,
     method: 'get',
   })
 }
@@ -26,8 +26,8 @@ export function getDishes(shop_id) {
 //获取评分
 export function getRating(userId, shopId) {
   return request({
-    url: '/shop/rating/post',
-    method: 'post',
+    url: '/shop/rating/get',
+    method: 'get',
     data: {
       userId,
       shopId,
@@ -38,7 +38,7 @@ export function getRating(userId, shopId) {
 //打分
 export function saveRating(userId, shopId, rating) {
   return request({
-    url: '/shop/rating/save',
+    url: '/shop/rating/post',
     method: 'post',
     data: {
       userId,

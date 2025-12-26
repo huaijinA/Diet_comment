@@ -80,12 +80,14 @@ public class ShopController {
     }
 
     /**
-     * 为店铺评分
+     * 为店铺评分（保存/更新评分）
      * 
+     * 对应前端：POST /shop/rating/post
+     *
      * @param shopRating 包含 userId, shopId, rating 的评分信息
-     * @return 评分结果
+     * @return 评分结果（返回当前评分值）
      */
-    @PostMapping("/shop/rating")
+    @PostMapping("/shop/rating/post")
     public Result rateShop(@RequestBody ShopRating shopRating) {
         if (shopRating.getUserId() == null || shopRating.getShopId() == null || shopRating.getRating() == null) {
             return Result.error("用户ID、店铺ID和评分不能为空");
@@ -96,7 +98,38 @@ public class ShopController {
             return Result.error("评分必须在0到5之间");
         }
         shopService.addShopRating(shopRating);
-        return Result.success("评分成功");
+        // 返回当前用户对该店铺的评分
+        return Result.success(shopRating.getRating());
+    }
+
+    /**
+     * 获取用户对某个店铺的评分
+     * 
+     * 对应前端：GET /shop/rating/get
+     */
+    @GetMapping("/shop/rating/get")
+    public Result getRating(@RequestParam Integer userId, @RequestParam Integer shopId) {
+        if (userId == null || shopId == null) {
+            return Result.error("用户ID、店铺ID不能为空");
+        }
+        Double rating = shopService.getUserRating(userId, shopId);
+        return Result.success(rating);
+    }
+
+    /**
+     * 删除用户对店铺的评分
+     * 
+     * 对应前端：DELETE /shop/rating/delete
+     */
+    @DeleteMapping("/shop/rating/delete")
+    public Result deleteRating(@RequestBody Map<String, Integer> payload) {
+        Integer userId = payload.get("userId");
+        Integer shopId = payload.get("shopId");
+        if (userId == null || shopId == null) {
+            return Result.error("用户ID、店铺ID不能为空");
+        }
+        shopService.deleteUserRating(userId, shopId);
+        return Result.success("删除评分成功");
     }
 
     @PostMapping("/shop/collect")
