@@ -26,7 +26,7 @@ export function getDishes(shop_id) {
 //获取评分
 export function getRating(userId, shopId) {
   return request({
-    url: '/shop/rating/get',
+    url: '/shop/rating',
     method: 'get',
     data: {
       userId,
@@ -38,7 +38,7 @@ export function getRating(userId, shopId) {
 //打分
 export function saveRating(userId, shopId, rating) {
   return request({
-    url: '/shop/rating/post',
+    url: '/shop/rating',
     method: 'post',
     data: {
       userId,
@@ -51,7 +51,7 @@ export function saveRating(userId, shopId, rating) {
 //删除评分
 export function deleteRating(userId, shopId) {
   return request({
-    url: '/shop/rating/delete',
+    url: '/shop/rating',
     method: 'delete',
     data: {
       userId,
