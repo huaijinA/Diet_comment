@@ -80,6 +80,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 
 // 确保表名是正确的复数形式
 @TableName("shops")
@@ -115,6 +116,7 @@ public class Shop {
     private String imgurl;
 
     // 标签 (数据库为 JSON )
+    @JsonRawValue
     @TableField("tags")
     private String tags;
 
