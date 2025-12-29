@@ -1,7 +1,7 @@
 target/
 !/src/main/resources/static/images/post/
 !/src/main/resources/static/images/
-!/.idea/
+/.idea/
 # 默认忽略的文件
 /shelf/
 /workspace.xml
@@ -10,3 +10,4 @@ target/
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
