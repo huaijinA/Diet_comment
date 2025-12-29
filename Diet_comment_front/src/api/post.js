@@ -2,16 +2,22 @@ import request from '@/utils/request'
 // 获取店铺帖子
 export function getShopPosts(shop_id) {
   return request({
-    url: '/post/shop/' + shop_id,
+    url: '/post',
     method: 'get',
+    params: {
+      shopId: shop_id,
+    },
   })
 }
 
 // 根据用户获取帖子
 export function getUserPosts(user_id) {
   return request({
-    url: '/post/user/' + user_id,
+    url: '/post',
     method: 'get',
+    params: {
+      userId: user_id,
+    },
   })
 }
 

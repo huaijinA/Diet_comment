@@ -199,7 +199,7 @@ export default {
         })
         getShopCollectNum(this.id).then((response) => {
           if (response.code == 1) {
-            this.favNum = response.data
+            this.favNum = response.data.num
           }
         })
       } catch (e) {
