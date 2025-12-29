@@ -158,8 +158,8 @@
     <div class="post">
       <div class="posthead">
         <span class="user">
-          <img :src="post.user.avatar" @click="goUser(post.user)" :alt="帖子图片" />
-          <span class="username">{{ post.user.username }}</span>
+          <img :src="post.user.avatarUrl" @click="goUser(post.user)" :alt="帖子图片" />
+          <span class="username">{{ post.user.userName }}</span>
         </span>
         <span>
           <span class="time">{{ post.createdAt }}</span>
@@ -183,7 +183,7 @@
             <button @click="openPostReply">💬</button>
           </span>
           <button @click="toggleFav">{{ fav ? '★' : '☆' }}</button>
-          <span class="favnum">{{ favNum }}</span>
+          <span class="favnum">{{ favNum.num }}</span>
         </span>
       </div>
     </div>
@@ -203,8 +203,8 @@
         </div>
         <div class="posthead">
           <span class="user">
-            <img :src="comment.user.avatar" @click="goUser(comment.user)" :alt="评论用户头像" />
-            <span class="username">{{ comment.user.username }}</span>
+            <img :src="comment.user.avatarUrl" @click="goUser(comment.user)" :alt="评论用户头像" />
+            <span class="username">{{ comment.user.userName }}</span>
           </span>
           <span>
             <span class="time">{{ comment.createdAt }}</span>
@@ -376,10 +376,10 @@ export default {
     toggleFav() {
       if (this.fav) {
         uncollectPosts(this.post.id, this.localUserInfo.id)
-        this.favNum = this.favNum > 0 ? this.favNum - 1 : 0
+        this.favNum.num = this.favNum.num > 0 ? this.favNum.num - 1 : 0
       } else {
         collectPosts(this.post.id, this.localUserInfo.id)
-        this.favNum = this.favNum + 1
+        this.favNum.num = this.favNum.num + 1
       }
       this.fav = !this.fav
     },
@@ -390,8 +390,8 @@ export default {
     //前往用户主页
     goUser(user) {
       this.userInfo.id = user.id
-      this.userInfo.userName = user.username
-      this.userInfo.avatarUrl = user.avatar
+      this.userInfo.userName = user.userName
+      this.userInfo.avatarUrl = user.avatarUrl
       this.userInfo.email = user.email
       this.userInfo.role = user.role
       this.$store.dispatch('getOneUser', this.userInfo)

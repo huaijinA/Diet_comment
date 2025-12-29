@@ -1,0 +1,9 @@
+/Diet_comment/target/
+!/src/main/resources/static/images/post/
+!/src/main/resources/static/images/
+/Diet_comment/.idea/
+/.idea/
+# 默认忽略的文件
+
+
+
