@@ -28,9 +28,9 @@ export function getRating(userId, shopId) {
   return request({
     url: '/shop/rating',
     method: 'get',
-    data: {
-      userId,
-      shopId,
+    params: {
+      userId: userId,
+      shopId: shopId,
     },
   })
 }
