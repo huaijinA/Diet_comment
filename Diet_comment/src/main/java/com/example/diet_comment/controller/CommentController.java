@@ -186,9 +186,8 @@ public class CommentController {
         return Result.success(created);
     }
 
-    @DeleteMapping("/post/{postId}/comment/{commentId}")
+    @DeleteMapping("/post/comment/{commentId}")
     public Result deleteComment(HttpServletRequest request,
-            @PathVariable Integer postId,
             @PathVariable Integer commentId) {
         // 从请求属性中获取当前用户ID
         Integer userId = (Integer) request.getAttribute("userId");
@@ -200,11 +199,6 @@ public class CommentController {
         Comment comment = commentMapper.selectById(commentId);
         if (comment == null) {
             return Result.error("评论不存在");
-        }
-
-        // 验证评论是否属于该帖子
-        if (!postId.equals(comment.getPostId())) {
-            return Result.error("评论不属于该帖子");
         }
 
         // 验证用户是否是评论作者
