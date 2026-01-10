@@ -158,8 +158,8 @@
     <div class="post">
       <div class="posthead">
         <span class="user">
-          <img :src="post.user.avatar" @click="goUser(post.user)" :alt="帖子图片" />
-          <span class="username">{{ post.user.username }}</span>
+          <img :src="post.user.avatarUrl" @click="goUser(post.user)" :alt="帖子图片" />
+          <span class="username">{{ post.user.userName }}</span>
         </span>
         <span>
           <span class="time">{{ post.createdAt }}</span>
@@ -183,7 +183,7 @@
             <button @click="openPostReply">💬</button>
           </span>
           <button @click="toggleFav">{{ fav ? '★' : '☆' }}</button>
-          <span class="favnum">{{ favNum }}</span>
+          <span class="favnum">{{ favNum.num }}</span>
         </span>
       </div>
     </div>
@@ -203,8 +203,8 @@
         </div>
         <div class="posthead">
           <span class="user">
-            <img :src="comment.user.avatar" @click="goUser(comment.user)" :alt="评论用户头像" />
-            <span class="username">{{ comment.user.username }}</span>
+            <img :src="comment.user.avatarUrl" @click="goUser(comment.user)" :alt="评论用户头像" />
+            <span class="username">{{ comment.user.userName }}</span>
           </span>
           <span>
             <span class="time">{{ comment.createdAt }}</span>
@@ -250,11 +250,11 @@
                 <div class="childposthead">
                   <span class="childuser">
                     <img
-                      :src="childcomment.user.avatar"
+                      :src="childcomment.user.avatarUrl"
                       @click="goUser(childcomment.user)"
                       :alt="子评论用户头像"
                     />
-                    <span class="childusername">{{ childcomment.user.username }}</span>
+                    <span class="childusername">{{ childcomment.user.userName }}</span>
                   </span>
                   <span>
                     <span class="childtime">{{ childcomment.createdAt }}</span>
@@ -376,10 +376,10 @@ export default {
     toggleFav() {
       if (this.fav) {
         uncollectPosts(this.post.id, this.localUserInfo.id)
-        this.favNum = this.favNum > 0 ? this.favNum - 1 : 0
+        this.favNum.num = this.favNum.num > 0 ? this.favNum.num - 1 : 0
       } else {
         collectPosts(this.post.id, this.localUserInfo.id)
-        this.favNum = this.favNum + 1
+        this.favNum.num = this.favNum.num + 1
       }
       this.fav = !this.fav
     },
@@ -390,8 +390,8 @@ export default {
     //前往用户主页
     goUser(user) {
       this.userInfo.id = user.id
-      this.userInfo.userName = user.username
-      this.userInfo.avatarUrl = user.avatar
+      this.userInfo.userName = user.userName
+      this.userInfo.avatarUrl = user.avatarUrl
       this.userInfo.email = user.email
       this.userInfo.role = user.role
       this.$store.dispatch('getOneUser', this.userInfo)
@@ -482,21 +482,21 @@ export default {
       try {
         const response = await getCommentsByParent(comment.postId, comment.id)
         if (response.code === 1) {
-          comment.child = response.data.map((comment) => ({
+          comment.child = response.data.replies.map((comment) => ({
             ...comment,
-            user: {},
+            // user: {},
             imgurls: [],
           }))
-          const childUserIds = comment.child.map((c) => c.userId)
-          const childUserRes = await Promise.all(childUserIds.map((id) => getUserInfoById(id)))
-          childUserRes.forEach((res) => {
-            if (res.code === 1) {
-              const targetComments2 = comment.child.filter((c) => c.userId === res.data.id)
-              targetComments2.forEach((comment) => {
-                comment.user = res.data
-              })
-            }
-          })
+          // const childUserIds = comment.child.map((c) => c.userId)
+          // const childUserRes = await Promise.all(childUserIds.map((id) => getUserInfoById(id)))
+          // childUserRes.forEach((res) => {
+          //   if (res.code === 1) {
+          //     const targetComments2 = comment.child.filter((c) => c.userId === res.data.id)
+          //     targetComments2.forEach((comment) => {
+          //       comment.user = res.data
+          //     })
+          //   }
+          // })
           const commentIds = comment.child.map((c) => c.id)
           const imgurlRes = await Promise.all(
             commentIds.map((id) => getImage('comment', id).then((res) => ({ id, res }))),
@@ -1123,6 +1123,11 @@ export default {
   align-items: center;
   color: #b3b3b3;
   margin-right: 10px;
+  font-family: monospace;
+  width: 10ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: right;
 }
 .childcommentcontent {
   font-size: 13px;

@@ -138,8 +138,8 @@ export default {
         if (response.code === 1) {
           this.posts = response.data.map((post) => ({
             ...post,
-            user: {},
-            shop: {},
+//            user: {},
+//            shop: {},
             imgurls: [],
           }))
           const postIds = this.posts.map((c) => c.id)
@@ -152,26 +152,27 @@ export default {
               if (post) post.imgurls = res.data
             }
           })
-          const userIds = this.posts.map((c) => c.userId)
-          const userRes = await Promise.all(userIds.map((id) => getUserInfoById(id)))
-          userRes.forEach((res) => {
-            if (res.code === 1) {
-              const targetPosts = this.posts.filter((post) => post.userId === res.data.id)
-              targetPosts.forEach((post) => {
-                post.user = res.data
-              })
-            }
-          })
-          const shopIds = this.posts.map((c) => c.shopId)
-          const shopRes = await Promise.all(shopIds.map((id) => getShopInfoById(id)))
-          shopRes.forEach((res) => {
-            if (res.code === 1) {
-              const targetPosts = this.posts.filter((post) => post.shopId === res.data.id)
-              targetPosts.forEach((post) => {
-                post.shop = res.data
-              })
-            }
-          })
+          //获取用户和商店信息
+          // const userIds = this.posts.map((c) => c.userId)
+          // const userRes = await Promise.all(userIds.map((id) => getUserInfoById(id)))
+          // userRes.forEach((res) => {
+          //   if (res.code === 1) {
+          //     const targetPosts = this.posts.filter((post) => post.userId === res.data.id)
+          //     targetPosts.forEach((post) => {
+          //       post.user = res.data
+          //     })
+          //   }
+          // })
+          // const shopIds = this.posts.map((c) => c.shopId)
+          // const shopRes = await Promise.all(shopIds.map((id) => getShopInfoById(id)))
+          // shopRes.forEach((res) => {
+          //   if (res.code === 1) {
+          //     const targetPosts = this.posts.filter((post) => post.shopId === res.data.id)
+          //     targetPosts.forEach((post) => {
+          //       post.shop = res.data
+          //     })
+          //   }
+          // })
           this.$store.dispatch('getPostInfo', this.posts)
           console.log(this.posts)
         } else {

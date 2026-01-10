@@ -256,6 +256,7 @@ export default {
               if (res.code === 1) {
                 if (res.data.collected === 1) shop.fav = true
                 else shop.fav = false
+                if (shop.rating === null) shop.rating = 0
               }
             }
           })
