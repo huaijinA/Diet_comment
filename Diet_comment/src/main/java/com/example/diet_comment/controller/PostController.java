@@ -47,14 +47,13 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/homepage")
-    public List<Post> getHomepage() {
-        // TODO: 实现更复杂的主页逻辑，例如推荐算法
-        // 这里简单返回最新的10个帖子
+    public Result getHomepage() {
+
         Page<Post> page = new Page<>(1, 10);
         QueryWrapper<Post> queryWrapper = new QueryWrapper<Post>().orderByDesc("created_at");
         List<Post> posts = postMapper.selectPage(page, queryWrapper).getRecords();
 
-        // 为每个帖子设置用户和商店信息
+        // 为每个帖子设置用户和商店信息F
         for (Post post : posts) {
             if (post.getUserId() != null) {
                 UserDTO user = userService.getUserDTOById(post.getUserId());
@@ -66,7 +65,7 @@ public class PostController {
             }
         }
 
-        return posts;
+        return Result.success(posts);
     }
 
     @PostMapping(value = "/post", consumes = "multipart/form-data")
