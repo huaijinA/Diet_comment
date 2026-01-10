@@ -103,8 +103,8 @@
           <li v-for="post in pagedData" :key="post.id" class="postcard" @click="goPost(post)">
             <div class="posthead">
               <span class="postuser">
-                <img :src="post.user.avatar" :alt="用户头像" />
-                <span class="postusername">{{ post.user.username }}</span>
+                <img :src="post.user.avatarUrl" :alt="用户头像" />
+                <span class="postusername">{{ post.user.userName }}</span>
               </span>
               <span>
                 <span class="time">{{ post.createdAt }}</span>
@@ -196,8 +196,9 @@
 import backImg from '@/assets/back1.jpg'
 import { getUserPosts, deletePosts, collectedPosts } from '@/api/post'
 import { getImage } from '@/api/image'
-import { collectedShops, getShopInfoById } from '@/api/shop'
-import { getUserInfoById } from '@/api/user'
+import { collectedShops } from '@/api/shop'
+// import { getShopInfoById } from '@/api/shop'
+// import { getUserInfoById } from '@/api/user'
 export default {
   data() {
     return {
@@ -362,8 +363,8 @@ export default {
         if (response.code == 1) {
           this.collectedposts = response.data.map((post) => ({
             ...post,
-            user: {},
-            shop: {},
+            // user: {},
+            // shop: {},
             imgurls: [],
           }))
           const postIds = this.collectedposts.map((c) => c.id)
@@ -376,26 +377,26 @@ export default {
               if (post) post.imgurls = res.data
             }
           })
-          const userIds = this.collectedposts.map((c) => c.userId)
-          const userRes = await Promise.all(userIds.map((id) => getUserInfoById(id)))
-          userRes.forEach((res) => {
-            if (res.code === 1) {
-              const targetPosts = this.collectedposts.filter((post) => post.userId === res.data.id)
-              targetPosts.forEach((post) => {
-                post.user = res.data
-              })
-            }
-          })
-          const shopIds = this.collectedposts.map((c) => c.shopId)
-          const shopRes = await Promise.all(shopIds.map((id) => getShopInfoById(id)))
-          shopRes.forEach((res) => {
-            if (res.code === 1) {
-              const targetPosts = this.collectedposts.filter((post) => post.shopId === res.data.id)
-              targetPosts.forEach((post) => {
-                post.shop = res.data
-              })
-            }
-          })
+          // const userIds = this.collectedposts.map((c) => c.userId)
+          // const userRes = await Promise.all(userIds.map((id) => getUserInfoById(id)))
+          // userRes.forEach((res) => {
+          //   if (res.code === 1) {
+          //     const targetPosts = this.collectedposts.filter((post) => post.userId === res.data.id)
+          //     targetPosts.forEach((post) => {
+          //       post.user = res.data
+          //     })
+          //   }
+          // })
+          // const shopIds = this.collectedposts.map((c) => c.shopId)
+          // const shopRes = await Promise.all(shopIds.map((id) => getShopInfoById(id)))
+          // shopRes.forEach((res) => {
+          //   if (res.code === 1) {
+          //     const targetPosts = this.collectedposts.filter((post) => post.shopId === res.data.id)
+          //     targetPosts.forEach((post) => {
+          //       post.shop = res.data
+          //     })
+          //   }
+          // })
           console.log(this.collectedposts)
         } else {
           console.log('获取失败')
