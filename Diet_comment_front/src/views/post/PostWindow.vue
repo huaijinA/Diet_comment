@@ -250,11 +250,11 @@
                 <div class="childposthead">
                   <span class="childuser">
                     <img
-                      :src="childcomment.user.avatar"
+                      :src="childcomment.user.avatarUrl"
                       @click="goUser(childcomment.user)"
                       :alt="子评论用户头像"
                     />
-                    <span class="childusername">{{ childcomment.user.username }}</span>
+                    <span class="childusername">{{ childcomment.user.userName }}</span>
                   </span>
                   <span>
                     <span class="childtime">{{ childcomment.createdAt }}</span>
@@ -482,21 +482,21 @@ export default {
       try {
         const response = await getCommentsByParent(comment.postId, comment.id)
         if (response.code === 1) {
-          comment.child = response.data.map((comment) => ({
+          comment.child = response.data.replies.map((comment) => ({
             ...comment,
-            user: {},
+            // user: {},
             imgurls: [],
           }))
-          const childUserIds = comment.child.map((c) => c.userId)
-          const childUserRes = await Promise.all(childUserIds.map((id) => getUserInfoById(id)))
-          childUserRes.forEach((res) => {
-            if (res.code === 1) {
-              const targetComments2 = comment.child.filter((c) => c.userId === res.data.id)
-              targetComments2.forEach((comment) => {
-                comment.user = res.data
-              })
-            }
-          })
+          // const childUserIds = comment.child.map((c) => c.userId)
+          // const childUserRes = await Promise.all(childUserIds.map((id) => getUserInfoById(id)))
+          // childUserRes.forEach((res) => {
+          //   if (res.code === 1) {
+          //     const targetComments2 = comment.child.filter((c) => c.userId === res.data.id)
+          //     targetComments2.forEach((comment) => {
+          //       comment.user = res.data
+          //     })
+          //   }
+          // })
           const commentIds = comment.child.map((c) => c.id)
           const imgurlRes = await Promise.all(
             commentIds.map((id) => getImage('comment', id).then((res) => ({ id, res }))),
@@ -1123,6 +1123,11 @@ export default {
   align-items: center;
   color: #b3b3b3;
   margin-right: 10px;
+  font-family: monospace;
+  width: 10ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: right;
 }
 .childcommentcontent {
   font-size: 13px;
