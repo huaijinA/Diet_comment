@@ -20,7 +20,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Page<Comment> getCommentsByPostId(Page<Comment> page, Integer postId) {
         QueryWrapper<Comment> qw = new QueryWrapper<>();
-        qw.eq("post_id", postId).orderByDesc("created_at");
+        qw.eq("post_id", postId).isNull("parent_comment_id").orderByDesc("created_at");
         return commentMapper.selectPage(page, qw);
     }
 
