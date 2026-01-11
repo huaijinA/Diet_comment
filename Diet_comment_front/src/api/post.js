@@ -22,10 +22,14 @@ export function getUserPosts(user_id) {
 }
 
 //获取帖子页面(主页)
-export function getMainPosts() {
+export function getMainPosts(pageNum,pageSize) {
   return request({
     url: '/homepage',
     method: 'get',
+    params: {
+      pageNum: pageNum,
+      pageSize: pageSize,
+    },
   })
 }
 
