@@ -91,7 +91,7 @@
 <script>
 import { updatePosts } from '@/api/post'
 import { getShopInfo } from '@/api/shop'
-import { uploadImage } from '@/api/image'
+// import { uploadImage } from '@/api/image'
 export default {
   data() {
     return {
@@ -274,15 +274,10 @@ export default {
           this.title,
           this.content,
           this.shopName,
-          null,
+          this.ImagesFiles,
         )
+
         if (response.code == 1) {
-          const imgResponse = await uploadImage(this.id, 'post', this.ImagesFiles)
-          if (imgResponse.code != 1) {
-            this.error = '照片上传失败'
-            this.success = ''
-            return
-          }
           this.error = ''
           this.success = '发布成功!'
           console.log(response.message)

@@ -25,8 +25,13 @@ public class WebConfig implements WebMvcConfigurer {
                         "/favicon.ico",
                         "/login",
                         "/register",
+                        "/register/send-code",
                         "/error");
     }
+				);
+	}
+
+
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

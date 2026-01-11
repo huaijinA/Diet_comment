@@ -2,16 +2,13 @@ package com.example.diet_comment.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.diet_comment.model.*;
 import com.example.diet_comment.model.DTO.UserDTO;
-import com.example.diet_comment.model.Post;
 import com.example.diet_comment.mapper.PostMapper;
-import com.example.diet_comment.model.Result;
-import com.example.diet_comment.model.Shop;
 import com.example.diet_comment.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 
 //import org.h2.engine.Comment;？
-import com.example.diet_comment.model.Comment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,12 +45,11 @@ public class PostController {
 
     @GetMapping("/homepage")
     public Result getHomepage() {
-
         Page<Post> page = new Page<>(1, 10);
         QueryWrapper<Post> queryWrapper = new QueryWrapper<Post>().orderByDesc("created_at");
         List<Post> posts = postMapper.selectPage(page, queryWrapper).getRecords();
 
-        // 为每个帖子设置用户和商店信息F
+        // 为每个帖子设置用户、商店和图片信息
         for (Post post : posts) {
             if (post.getUserId() != null) {
                 UserDTO user = userService.getUserDTOById(post.getUserId());
@@ -63,6 +59,7 @@ public class PostController {
                 Shop shop = shopService.getShopByShopId(post.getShopId());
                 post.setShop(shop);
             }
+
         }
 
         return Result.success(posts);
@@ -147,6 +144,13 @@ public class PostController {
                              @RequestPart(value = "img", required = false) MultipartFile[] img) {
 
 
+        System.out.println(img != null ? img.length : "null");
+        System.out.println(id != null ? id : "null");
+        System.out.println(title != null ? title : "null");
+        System.out.println(content != null ? content : "null");
+        System.out.println(shopName != null ? shopName : "null");
+
+
         Integer userId = (Integer) request.getAttribute("userId");
         Post existingPost = postService.getPostById(id);
         if (existingPost == null) {
@@ -218,6 +222,7 @@ public class PostController {
             return Result.error("无权限修改该帖子或帖子不存在");
         }
         try {
+            imageService.deleteByTypeAndId("post", id);
             postService.deletePostsById(id);
             return Result.success();
         } catch (IllegalStateException e) {
