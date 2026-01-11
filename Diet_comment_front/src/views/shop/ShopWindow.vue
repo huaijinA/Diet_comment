@@ -51,8 +51,8 @@
       <li class="post" v-for="post in posts" :key="post.id" @click="goPost(post)">
         <div class="posthead">
           <span class="user">
-            <img :src="post.user.avatar" :alt="用户头像" />
-            <span class="username">{{ post.user.username }}</span>
+            <img :src="post.user.avatarUrl" :alt="用户头像" />
+            <span class="username">{{ post.user.userName }}</span>
           </span>
           <span>
             <span class="time">{{ post.createdAt }}</span>

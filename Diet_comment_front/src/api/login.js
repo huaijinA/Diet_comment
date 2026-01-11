@@ -22,14 +22,14 @@ export function getUserInfo() {
   })
 }
 
-//发送验证码（暂未实现后端）
+//发送验证码
 export function sendCode(email) {
+  const formData = new FormData();
+  formData.append('email', email);
   return request({
-    url: '/register/sendcode', //后端接口
+    url: '/register/send-code', //后端接口
     method: 'post',
-    data: {
-      email,
-    },
+    data: formData ,
   })
 }
 

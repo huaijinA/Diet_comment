@@ -43,12 +43,13 @@
           <span>共 {{ posts.length }} 条帖子</span>
           <button @click="newPost">✒️写点什么</button>
         </div>
+        <div v-if="this.posts.length == 0" class="tips">暂无相关帖子</div>
         <ul class="cards">
           <li v-for="post in posts" :key="post.id" class="card" @click="goPost(post)">
             <div class="posthead">
               <span class="postuser">
-                <img :src="post.user.avatar" :alt="用户头像" />
-                <span class="postusername">{{ post.user.username }}</span>
+                <img :src="post.user.avatarUrl" :alt="用户头像" />
+                <span class="postusername">{{ post.user.userName }}</span>
               </span>
               <span>
                 <span class="time">{{ post.createdAt }}</span>
@@ -193,6 +194,10 @@ export default {
       }
       try {
         const response = await searchPosts(this.search)
+        if (response.message == "没有找到相关帖子") {
+          this.posts = []
+          return
+        }
         if (response.code === 1) {
           this.posts = response.data.map((post) => ({
             ...post,
@@ -538,6 +543,17 @@ export default {
   align-items: flex-end;
   font-size: 15px;
   color: #9a9a9a;
+  margin-bottom: 20px;
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+}
+.tips {
+  width: 100%;
+  text-align: center;
+  align-items: flex-end;
+  font-size: 15px;
+  color: #ff6467;
   margin-bottom: 20px;
   grid-column: 1 / -1;
   display: flex;

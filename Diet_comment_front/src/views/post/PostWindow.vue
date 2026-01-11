@@ -712,7 +712,7 @@ export default {
         }
         const response = await replyComments(content, postId, commentId)
         if (response.code == 1) {
-          const id = response.data
+          const id = response.data.id
           if (this.ImagesFiles.length > 0) {
             const imgResponse = await uploadImage(id, 'comment', this.ImagesFiles)
             if (imgResponse.code != 1) {

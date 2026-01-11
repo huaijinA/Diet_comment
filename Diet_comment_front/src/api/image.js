@@ -10,7 +10,7 @@ export function uploadImage(id, type, Images) {
     })
   }
   return request({
-    url: '/upload',
+    url: '/images/upload',
     method: 'post',
     data: formData,
   })
@@ -19,7 +19,7 @@ export function uploadImage(id, type, Images) {
 // 获取图片
 export function getImage(imageableType, imageableId) {
   return request({
-    url: `/imageMap`,
+    url: `/images/imageMap`,
     method: 'get',
     params: {
       imageableType: imageableType,

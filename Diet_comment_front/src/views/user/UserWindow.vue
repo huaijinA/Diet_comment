@@ -273,7 +273,7 @@ export default {
             s.shop?.address.toLowerCase().includes(searchs.toLowerCase()) ||
             s.title.toLowerCase().includes(searchs.toLowerCase()) ||
             s.content.toLowerCase().includes(searchs.toLowerCase()) ||
-            s.user?.username.toLowerCase().includes(searchs.toLowerCase()),
+            s.user?.userName.toLowerCase().includes(searchs.toLowerCase()),
         )
       } else if (this.category == '关注店铺') {
         return this.shops
@@ -326,7 +326,12 @@ export default {
           this.myposts = response.data.map((post) => ({
             ...post,
             imgurls: [],
+            shop: post.shop ? {
+              ...post.shop,  // 保留原始 shop 的所有属性
+              tags: post.shop.tags || []
+            } : {},
           }))
+          
           const postIds = this.myposts.map((c) => c.id)
           const imgurlRes = await Promise.all(
             postIds.map((id) => getImage('post', id).then((res) => ({ id, res }))),
@@ -349,6 +354,10 @@ export default {
         const response = await collectedShops(this.userInfo.id)
         if (response.code == 1) {
           this.shops = response.data
+          this.shops = this.shops.map((shop) => ({
+            ...shop,
+            tags: shop.tags || []
+          }))
         } else {
           this.error = '获取失败'
         }
@@ -365,6 +374,10 @@ export default {
             ...post,
             // user: {},
             // shop: {},
+            shop: post.shop ? {
+              ...post.shop,  // 保留原始 shop 的所有属性
+              tags: post.shop.tags || []
+            } : {},
             imgurls: [],
           }))
           const postIds = this.collectedposts.map((c) => c.id)
