@@ -29,6 +29,9 @@ service.interceptors.response.use(
     const res = response.data
 
     if (res.code !== 1) {
+      if (res.message === "没有找到相关帖子") {
+        return res
+      }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
       return res

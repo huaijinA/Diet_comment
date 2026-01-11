@@ -30,13 +30,13 @@ export function getMainPosts() {
 }
 
 //帖子搜索
-export function searchPosts(Keyword) {
+export function searchPosts(keyword) {
+  const formData = new FormData();
+  formData.append('keyword', keyword);
   return request({
     url: '/post/search',
     method: 'post',
-    data: {
-      Keyword,
-    },
+    data: formData ,
   })
 }
 

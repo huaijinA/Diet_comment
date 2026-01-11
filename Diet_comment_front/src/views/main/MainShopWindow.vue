@@ -245,6 +245,7 @@ export default {
           this.shops = this.shops.map((shop) => ({
             ...shop,
             fav: false,
+            tags: shop.tags || []
           }))
 
           const shopsIds = this.shops.map((c) => c.id)
