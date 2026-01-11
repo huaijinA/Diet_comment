@@ -27,7 +27,7 @@ export function sendCode(email) {
   const formData = new FormData();
   formData.append('email', email);
   return request({
-    url: '/register/send-code', //后端接口
+    url: '/send-code', //后端接口
     method: 'post',
     data: formData ,
   })

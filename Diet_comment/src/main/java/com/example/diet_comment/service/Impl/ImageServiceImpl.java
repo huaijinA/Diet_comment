@@ -139,6 +139,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             if (imagesToDelete == null || imagesToDelete.isEmpty()) {
                 return;
             }
+            System.out.println("Deleting images: " + imagesToDelete.size());
 
             for (Image image : imagesToDelete) {
                 String imageUrl = image.getImageUrl();

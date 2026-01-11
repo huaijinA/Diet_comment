@@ -36,7 +36,7 @@
       </label>
       <div class="options">
         <router-link class="sign" to="/register">注册</router-link>
-        <router-link class="forgot" to="/forget">忘记密码？</router-link>
+        <!-- <router-link class="forgot" to="/forget">忘记密码？</router-link> -->
       </div>
 
       <button class="submit" type="submit">
