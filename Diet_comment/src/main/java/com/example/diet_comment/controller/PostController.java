@@ -44,8 +44,9 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/homepage")
-    public Result getHomepage() {
-        Page<Post> page = new Page<>(1, 10);
+    public Result getHomepage(@RequestParam(defaultValue = "1") int pageNum,
+                              @RequestParam(defaultValue = "10") int pageSize) {
+        Page<Post> page = new Page<>(pageNum, pageSize);
         QueryWrapper<Post> queryWrapper = new QueryWrapper<Post>().orderByDesc("created_at");
         List<Post> posts = postMapper.selectPage(page, queryWrapper).getRecords();
 
@@ -62,7 +63,14 @@ public class PostController {
 
         }
 
-        return Result.success(posts);
+        // 返回分页信息
+        Map<String, Object> data = Map.of(
+                "posts", posts,
+                "total", page.getTotal(),
+                "current", page.getCurrent(),
+                "size", page.getSize()
+        );
+        return Result.success(data);
     }
 
     @PostMapping(value = "/post", consumes = "multipart/form-data")

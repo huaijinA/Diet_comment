@@ -52,6 +52,7 @@ public class UserController {
                                  @RequestParam(required = false) MultipartFile image) {
         Integer currentUserId = (Integer) request.getAttribute("userId");
         User user = userService.getById(currentUserId);
+        System.out.println("Updating user info for userId: " + currentUserId);
 
         // 先校验用户名是否被其他用户占用（需要在 UserService 中提供 getByUserName 方法）
         if (userName != null && !userName.isEmpty()) {
@@ -70,8 +71,8 @@ public class UserController {
 
                 try {
                     // 删除旧图片记录
-                    imageService.deleteByTypeAndId("user", currentUserId);
-
+                    // imageService.deleteByTypeAndId("user", currentUserId);
+                    System.out.println("删除旧user图片记录"+currentUserId);
 
                 } catch (Exception e) {
                     e.printStackTrace();
