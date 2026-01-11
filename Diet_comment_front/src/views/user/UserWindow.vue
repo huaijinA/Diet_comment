@@ -493,12 +493,13 @@ export default {
       this.isDeleteModalVisible = false
       this.deleteId = null
     },
-    deletePost() {
+    async deletePost() {
       try {
-        const response = deletePosts(this.deleteId)
+        const response = await deletePosts(this.deleteId)
         if (response.code == 1) {
+          this.isDeleteModalVisible = false
+          this.deleteId = null
           this.loadMyPost()
-          alert('删除成功')
         }
       } catch (e) {
         console.log(e)
