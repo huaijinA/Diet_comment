@@ -67,6 +67,17 @@ public class UserController {
         }
 
         if (image != null && !image.isEmpty()) {
+
+                try {
+                    // 删除旧图片记录
+                    imageService.deleteByTypeAndId("user", currentUserId);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return Result.error("删除图片时发生错误: " + e.getMessage());
+                }
+
             String avatarUrl = imageService.uploadImageById(currentUserId, image, "user");
             user.setAvatarUrl(avatarUrl);
         }
