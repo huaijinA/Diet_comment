@@ -107,7 +107,7 @@ export default {
       search: '',
       presearch: '',
       page: 1,
-      changepage: '',
+      changepage: 1,
       perPage: 9,
       totalPages: 0,
       userInfo: {
