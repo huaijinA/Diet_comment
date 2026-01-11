@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f0d33c0-37fe-4ec4-9937-ee40bda853fb" name="更改" comment="" />
+    <list default="true" id="7f0d33c0-37fe-4ec4-9937-ee40bda853fb" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/src/main/java/com/example/diet_comment/config/WebMvcConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Diet_comment/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/uploads/post/4_87b2aa4ffbe543bb814498e2acaf8b7f.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diet_comment/uploads/post/4_934899d645044535956b49aad1ad594d.png" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,6 +46,7 @@
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,

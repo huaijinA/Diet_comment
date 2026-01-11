@@ -8,28 +8,25 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.diet_comment.interceptor.LoginCheck;
 
-
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	@Autowired
-	private LoginCheck loginCheck;
+    @Autowired
+    private LoginCheck loginCheck;
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(loginCheck)
-				.addPathPatterns("/**") // 拦截所有请求
-				.excludePathPatterns(
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loginCheck)
+                .addPathPatterns("/**") // 拦截所有请求
+                .excludePathPatterns(
+                        "/food_picture/**",
                         "/images/**",
                         "/send-code",
                         "/favicon.ico",
-						"/login",
-						"/register",
-                        "/error"
-				);
-	}
-
-
+                        "/login",
+                        "/register",
+                        "/error");
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -40,5 +37,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*") // 允许所有请求头
                 .maxAge(3600); // 预检请求的有效期
     }
-	
+
 }
