@@ -147,7 +147,6 @@
             <select v-model="sortBy">
               <option value="rating">评分</option>
               <option value="reviews">评价数</option>
-              <option value="distance">距离</option>
             </select>
           </span>
           <span class="total"> 共 {{ filtered.length }} 家店 </span>
@@ -287,7 +286,6 @@ export default {
           .sort((a, b) => {
             if (this.sortBy === 'rating') return b.rating - a.rating
             if (this.sortBy === 'reviews') return b.reviews - a.reviews
-            if (this.sortBy === 'distance') return a.distance - b.distance
             return 0
           })
       }
