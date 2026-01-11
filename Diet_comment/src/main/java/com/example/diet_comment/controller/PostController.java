@@ -47,12 +47,25 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/homepage")
-    public List<Post> getHomepage() {
-        // TODO: 实现更复杂的主页逻辑，例如推荐算法
-        // 这里简单返回最新的10个帖子
+    public Result getHomepage() {
+
         Page<Post> page = new Page<>(1, 10);
         QueryWrapper<Post> queryWrapper = new QueryWrapper<Post>().orderByDesc("created_at");
-        return postMapper.selectPage(page, queryWrapper).getRecords();
+        List<Post> posts = postMapper.selectPage(page, queryWrapper).getRecords();
+
+        // 为每个帖子设置用户和商店信息F
+        for (Post post : posts) {
+            if (post.getUserId() != null) {
+                UserDTO user = userService.getUserDTOById(post.getUserId());
+                post.setUser(user);
+            }
+            if (post.getShopId() != null) {
+                Shop shop = shopService.getShopByShopId(post.getShopId());
+                post.setShop(shop);
+            }
+        }
+
+        return Result.success(posts);
     }
 
     @PostMapping(value = "/post", consumes = "multipart/form-data")
@@ -131,7 +144,7 @@ public class PostController {
                              @RequestParam(required = false) String title,
                              @RequestParam(required = false) String content,
                              @RequestParam(required = false) String shopName,
-                             @RequestPart(value = "img", required = false) MultipartFile img) {
+                             @RequestPart(value = "img", required = false) MultipartFile[] img) {
 
 
         Integer userId = (Integer) request.getAttribute("userId");
@@ -144,21 +157,31 @@ public class PostController {
         }
 
 
-        if (img != null && !img.isEmpty()) {
-            try {
 
-                imageService.deleteByTypeAndId("post", id);
+        if (img != null && img.length > 0) {
+            List<MultipartFile> validFiles = java.util.Arrays.stream(img)
+                    .filter(f -> f != null && !f.isEmpty())
+                    .toList();
 
-                String newImageUrl = imageService.uploadImageById(id, img, "post");
-                if (newImageUrl == null) {
+            if (!validFiles.isEmpty()) {
+                try {
+                    // 删除旧图片记录
+                    imageService.deleteByTypeAndId("post", id);
 
-                    return Result.error("图片更新失败");
+                    // 上传新图片（兼容单张/多张）
+                    if (validFiles.size() == 1) {
+                        imageService.uploadImageById(id, validFiles.get(0), "post");
+                    } else {
+                        imageService.uploadMultiImages(id, validFiles.toArray(new MultipartFile[0]), "post");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return Result.error("处理图片时发生错误: " + e.getMessage());
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return Result.error("处理图片时发生错误: " + e.getMessage());
             }
         }
+
+
 
 
         boolean isUpdated = false;

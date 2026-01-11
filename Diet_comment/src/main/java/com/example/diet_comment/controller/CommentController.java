@@ -28,7 +28,7 @@ public class CommentController {
 
     @Autowired
     private PostService postService;
-
+//
     /**
      * 获取帖子评论（分页）
      * URL: /post/{id}/comment
@@ -184,6 +184,39 @@ public class CommentController {
             created.setUser(userService.getUserDTOById(created.getUserId()));
         }
         return Result.success(created);
+    }
+
+    @DeleteMapping("/post/comment/{commentId}")
+    public Result deleteComment(HttpServletRequest request,
+            @PathVariable Integer commentId) {
+        // 从请求属性中获取当前用户ID
+        Integer userId = (Integer) request.getAttribute("userId");
+        if (userId == null) {
+            return Result.error("未登录");
+        }
+
+        // 检查评论是否存在
+        Comment comment = commentMapper.selectById(commentId);
+        if (comment == null) {
+            return Result.error("评论不存在");
+        }
+
+        // 验证用户是否是评论作者
+        if (!userId.equals(comment.getUserId())) {
+            return Result.error("无权删除该评论");
+        }
+
+        // 删除评论
+        commentMapper.deleteById(commentId);
+
+        // 如果是主评论，同时删除其所有子回复
+        if (comment.getParentCommentId() == null) {
+            QueryWrapper<Comment> queryWrapper = new QueryWrapper<Comment>()
+                    .eq("parent_comment_id", commentId);
+            commentMapper.delete(queryWrapper);
+        }
+
+        return Result.success("删除成功");
     }
 
 }
