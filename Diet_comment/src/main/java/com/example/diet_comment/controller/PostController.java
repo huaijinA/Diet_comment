@@ -147,6 +147,13 @@ public class PostController {
                              @RequestPart(value = "img", required = false) MultipartFile[] img) {
 
 
+        System.out.println(img != null ? img.length : "null");
+        System.out.println(id != null ? id : "null");
+        System.out.println(title != null ? title : "null");
+        System.out.println(content != null ? content : "null");
+        System.out.println(shopName != null ? shopName : "null");
+
+
         Integer userId = (Integer) request.getAttribute("userId");
         Post existingPost = postService.getPostById(id);
         if (existingPost == null) {
