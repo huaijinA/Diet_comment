@@ -24,8 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/send-code",
                         "/favicon.ico",
 						"/login",
-						"/register/",
-                        "/register/send-code",
+						"/register",
+
 
                         "/error"
 				);
