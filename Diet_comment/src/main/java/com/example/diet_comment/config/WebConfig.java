@@ -20,18 +20,14 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(loginCheck)
 				.addPathPatterns("/**") // 拦截所有请求
 				.excludePathPatterns(
+                        "/food_picture/**",
                         "/images/**",
                         "/send-code",
                         "/favicon.ico",
-						"/login",
-						"/register",
-
-
-                        "/error"
-				);
-	}
-
-
+                        "/login",
+                        "/register",
+                        "/error");
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
