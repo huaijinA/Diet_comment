@@ -28,10 +28,6 @@ public class WebConfig implements WebMvcConfigurer {
                         "/register/send-code",
                         "/error");
     }
-				);
-	}
-
-
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
