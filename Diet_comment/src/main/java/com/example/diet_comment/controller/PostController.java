@@ -225,6 +225,7 @@ public class PostController {
             return Result.error("无权限修改该帖子或帖子不存在");
         }
         try {
+            imageService.deleteByTypeAndId("post", id);
             postService.deletePostsById(id);
             return Result.success();
         } catch (IllegalStateException e) {
