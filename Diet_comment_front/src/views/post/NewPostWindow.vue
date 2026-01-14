@@ -221,11 +221,13 @@ export default {
       try {
         const response = await newPosts(this.title, this.content, this.shopName, null)
         if (response.code == 1) {
-          const imgResponse = await uploadImage(response.data.id, 'post', this.ImagesFiles)
-          if (imgResponse.code != 1) {
-            this.error = '照片上传失败'
-            this.success = ''
-            return
+          if (this.ImagesFiles.length > 0) {
+            const imgResponse = await uploadImage(response.data.id, 'post', this.ImagesFiles)
+            if (imgResponse.code != 1) {
+              this.error = '照片上传失败'
+              this.success = ''
+              return
+            }
           }
           this.error = ''
           this.success = '发布成功!'
