@@ -738,6 +738,7 @@ export default {
 .postshop {
   width: 100%;
   justify-items: end;
+  margin-top: auto;
 }
 .shopname {
   font-size: 13px;
