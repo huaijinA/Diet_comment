@@ -76,6 +76,15 @@
           </li>
           <div class="end">已经到底啦！可以去别处逛逛！</div>
         </ul>
+        <div class="pager">
+          <button @click="prevPage" :disabled="page === 1">上一页</button>
+          <span>
+            第
+            <input v-model="changepage" @keyup.enter="changePage" />
+            /{{ totalPages }}页
+          </span>
+          <button @click="nextPage" :disabled="page >= totalPages">下一页</button>
+        </div>
       </section>
     </main>
 
@@ -97,6 +106,10 @@ export default {
       posts: [],
       search: '',
       presearch: '',
+      page: 1,
+      changepage: 1,
+      perPage: 9,
+      totalPages: 0,
       userInfo: {
         id: null,
         userName: '',
@@ -116,7 +129,7 @@ export default {
   },
   created() {
     this.loadUserInfo()
-    this.GetMainPosts()
+    this.GetMainPosts(1, this.perPage)
   },
   mounted() {
     document.addEventListener('click', this.onDocClick)
@@ -126,6 +139,34 @@ export default {
     this.$store.dispatch('clearPostInfo')
   },
   methods: {
+    //换页函数
+    changePage() {
+      if (this.changepage <= this.totalPages && this.changepage > 0) {
+        this.page = this.changepage
+        this.GetMainPosts(this.page, this.perPage)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        this.changepage = this.page
+      }
+    },
+    //上一页
+    prevPage() {
+      if (this.page > 1) {
+        this.page--
+        this.GetMainPosts(this.page, this.perPage)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      this.changepage = this.page
+    },
+    //下一页
+    nextPage() {
+      if (this.page < this.totalPages) {
+        this.page++
+        this.GetMainPosts(this.page, this.perPage)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      this.changepage = this.page
+    },
     //收起页面
     onDocClick(e) {
       if (this.avatarflag && this.$refs.avatarBtn && !this.$refs.avatarBtn.contains(e.target)) {
@@ -133,11 +174,12 @@ export default {
       }
     },
     //获取热门帖子信息
-    async GetMainPosts() {
+    async GetMainPosts(pageNum, pageSize) {
       try {
-        const response = await getMainPosts()
+        const response = await getMainPosts(pageNum, pageSize)
         if (response.code === 1) {
-          this.posts = response.data.map((post) => ({
+          this.totalPages = response.data.total
+          this.posts = response.data.posts.map((post) => ({
             ...post,
 //            user: {},
 //            shop: {},
@@ -558,5 +600,29 @@ export default {
   grid-column: 1 / -1;
   display: flex;
   justify-content: center;
+}
+.pager {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.pager input {
+  width: 20px;
+  padding: 6px 5px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  background: #fff;
+  cursor: text;
+  color: #666;
+}
+.pager button {
+  border: 1px solid;
+  border-radius: 5px;
+  background: linear-gradient(
+    135deg,
+    rgba(141, 255, 253, 0.461) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
 }
 </style>
