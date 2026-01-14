@@ -484,7 +484,7 @@ export default {
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
-  gap: 30px;
+  gap: 20px;
   list-style: none;
   padding: 0;
   margin: 0;
